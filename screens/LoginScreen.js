@@ -3,6 +3,8 @@ import { View, Text, Image, StyleSheet, KeyboardAvoidingView, TouchableOpacity, 
 import { TextInput, Button } from 'react-native-paper';
 import { auth } from '../firebase';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import validator from 'email-validator';
+
 
 
 const LoginScreen = ({ navigation }) => {
@@ -16,6 +18,11 @@ const LoginScreen = ({ navigation }) => {
             Alert.alert("please enter all the fields")
             return
         }
+        if (validator.validate(email) == false) {
+            Alert.alert("please enter valid email address")
+            return
+        }
+
         try {
             const result = await auth.signInWithEmailAndPassword(email, password)
             console.log("Logged In")
@@ -77,3 +84,9 @@ const styles = StyleSheet.create({
 
 
 export default LoginScreen
+
+
+
+
+
+

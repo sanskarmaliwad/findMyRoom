@@ -2,16 +2,34 @@ import { View, Text, KeyboardAvoidingView, TouchableOpacity, StyleSheet, Image, 
 import React, { useState, useEffect } from 'react'
 import { TextInput, Button } from 'react-native-paper'
 import { auth } from '../firebase'
+import validator from 'email-validator';
+import { enableNetworkProviderAsync } from 'expo-location';
 
 const SignupScreen = ({ navigation }) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [confirmPassword, setconfirmPassword] = useState('');
 
     const userSignup = async () => {
-        if (!email || !password) {
-            Alert.alert("please all all the fields")
-            return
+
+        //console.log(email + ' ' + password + ' ' + confirmPassword);
+        if (!email || !password || !confirmPassword) {
+            Alert.alert("please all all the fields");
+            return;
+        } else if (validator.validate(email) == false) {
+            Alert.alert("please enter valid email address");
+            return;
+        } else if (password.length < 8 || password.length > 20) {
+            Alert.alert("Password should be min 8 char and max 20 char");
+            return;
+        } else if (password !== confirmPassword) {
+            Alert.alert("Password and confirm password should be same.");
+            return;
+        } else if (confirmPassword.length == 0) {
+            Alert.alert("Confirm Password is required feild");
+            return;
         }
+
         try {
             const result = await auth.createUserWithEmailAndPassword(email, password)
             console.log("user is Registered")
@@ -60,6 +78,14 @@ const SignupScreen = ({ navigation }) => {
                     mode="outlined"
                     secureTextEntry={true}
                     onChangeText={text => setPassword(text)}
+                />
+
+                <TextInput
+                    label="confirm password"
+                    value={confirmPassword}
+                    mode="outlined"
+                    secureTextEntry={true}
+                    onChangeText={text => setconfirmPassword(text)}
                 />
                 <Button mode="contained" onPress={() => userSignup()}>
                     SignUp
