@@ -106,8 +106,7 @@ const ItemsList = ({navigation}) => {
             <Card style={styles.card}>
           <Card.Title title={item.LandMrk}  />
           <Card.Content>
-            <Paragraph>{item.size}</Paragraph>
-            <Paragraph>Rs {item.price} for {item.maxCap}</Paragraph>
+            <Paragraph style={{textAlign:'left'}}>Rs {item.price}/-</Paragraph>
             {/* <Paragraph>{item.desc}</Paragraph> */}
           </Card.Content>
           <Card.Cover style={{borderRadius: 10,overflow: 'hidden'}} source={{ uri: item.image }} />
@@ -150,8 +149,10 @@ const ItemsList = ({navigation}) => {
       
       
   return (
-    <View>
-      <FlatList
+    <View style={{backgroundColor:"#DDE2E5"}}>
+      <FlatList 
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
         data={newData.reverse()}
         keyExtractor={(item)=>item.phone}
         renderItem={({item})=>renderItem(item)}
