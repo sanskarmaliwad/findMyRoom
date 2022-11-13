@@ -1,13 +1,15 @@
 import * as firebase from 'firebase'
 import firestore from 'firebase/firestore'
+import 'firebase/storage';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCgCwrBlLuXD6g4KgpbCKmUAp-qOaIUw_c",
-    authDomain: "fir-auth-7cca2.firebaseapp.com",
-    projectId: "fir-auth-7cca2",
-    storageBucket: "fir-auth-7cca2.appspot.com",
-    messagingSenderId: "1039760197127",
-    appId: "1:1039760197127:web:502201a6afe52952970ca2"
+    apiKey: "AIzaSyDQ2Nj52OECaV6ZBOAKkJuwRK-yQSHHt_o",
+    authDomain: "roomwalalatest-10-11-22.firebaseapp.com",
+    projectId: "roomwalalatest-10-11-22",
+    storageBucket: "roomwalalatest-10-11-22.appspot.com",
+    messagingSenderId: "74098765197",
+    appId: "1:74098765197:web:e030e480c16cf2ef4ce1c4",
+    measurementId: "G-88HVN67QJW"
   };
 
   let app;

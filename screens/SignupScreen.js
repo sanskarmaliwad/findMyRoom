@@ -1,4 +1,4 @@
-import { View, Text, KeyboardAvoidingView, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native'
+import { View, Text, KeyboardAvoidingView, TouchableOpacity, StyleSheet, Image, Alert, Dimensions} from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { TextInput, Button } from 'react-native-paper'
 import { auth } from '../firebase'
@@ -60,10 +60,10 @@ const SignupScreen = ({ navigation }) => {
 
 
     return (
-        <KeyboardAvoidingView behavior="position">
+        <KeyboardAvoidingView style={{ height: Dimensions.get('window').height, backgroundColor:"#DDE2E5"}} behavior="position">
             <View style={styles.box1}>
-                <Image style={{ width: 200, height: 200 }} source={require('../assets/home.jpg')} />
-                <Text style={styles.text}>please sign up to continue!</Text>
+                <Image style={{ width: 250, height: 250 }} source={require('../assets/home.png')} />
+                <Text style={styles.text}>Please Sign Up To Continue!</Text>
             </View>
             <View style={styles.box2}>
                 <TextInput
@@ -100,12 +100,14 @@ const SignupScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     box1: {
-        alignItems: "center"
+        alignItems: "center",
     },
     box2: {
-        paddingHorizontal: 10,
+        paddingHorizontal: 15,
         height: "50%",
-        justifyContent: "space-evenly"
+        justifyContent: "space-evenly",
+        marginHorizontal:20,
+        marginVertical:30
     },
     text: {
         fontSize: 22

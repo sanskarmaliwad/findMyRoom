@@ -1,12 +1,14 @@
 import React from "react";
 import { View, Text, Image, TextInput } from "react-native";
-
 import { COLORS, FONTS, SIZES } from "../constants";
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 
 const HomeHeader = ({ onSearch }) => {
   return (
     <View
       style={{
+        margin:10,
+        borderRadius:20,
         backgroundColor: COLORS.primary,
         padding: SIZES.font,
       }}
@@ -53,9 +55,10 @@ const HomeHeader = ({ onSearch }) => {
             fontSize: SIZES.large,
             color: COLORS.white,
             marginTop: SIZES.base / 2,
+            textAlign:'center'
           }}
         >
-          Let’s find a perfect Room.
+          Find Your Perfect Room
         </Text>
       </View>
 
@@ -77,7 +80,7 @@ const HomeHeader = ({ onSearch }) => {
             style={{ width: 20, height: 20, marginRight: SIZES.base }}
           /> */}
           <TextInput
-            placeholder="Search Rooms/Hostels"
+            placeholder="Search by Price or Landmark or Capacity..."
             style={{ flex: 1 }}
             onChangeText={onSearch}
           />
