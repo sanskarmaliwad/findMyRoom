@@ -17,8 +17,7 @@ const LoginScreen = ({ navigation }) => {
         if (!email || !password) {
             Alert.alert("please enter all the fields")
             return
-        }
-        if (validator.validate(email) == false) {
+        } if (validator.validate(email) == false) {
             Alert.alert("please enter valid email address")
             return
         }
@@ -84,9 +83,3 @@ const styles = StyleSheet.create({
 
 
 export default LoginScreen
-
-
-
-
-
-
