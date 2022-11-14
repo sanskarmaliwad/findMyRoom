@@ -7,7 +7,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer, DefaultTheme as DefaultThemeNav } from '@react-navigation/native';
 import { auth } from './firebase';
 
-
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 import CreateAd from './screens/CreateAd';
@@ -98,7 +97,7 @@ const TabNavigator = () => {
     >
       <Tab.Screen name="home" component={ListNavigator} options={{ headerShown: false }}/>
       <Tab.Screen name="create" component={AdNavigator} options={{ headerShown: false }}/>
-      <Tab.Screen name="account" component={AccountScreen} />
+      <Tab.Screen name="account" component={AccountScreen} options={{ headerShown: false }}/>
     </Tab.Navigator>
     
   )

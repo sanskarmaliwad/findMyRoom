@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react'
-import { View, Text ,FlatList,StyleSheet,Linking,Platform,TouchableOpacity} from 'react-native'
+import {StatusBar, View, Text ,FlatList,StyleSheet,Linking,Platform,TouchableOpacity} from 'react-native'
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 import { store } from '../firebase';
 import HomeHeader from '../components/HomeHeader';
@@ -109,7 +109,7 @@ const ItemsList = ({navigation}) => {
             <Paragraph style={{textAlign:'left'}}>Rs {item.price}/-</Paragraph>
             {/* <Paragraph>{item.desc}</Paragraph> */}
           </Card.Content>
-          <Card.Cover style={{borderRadius: 10,overflow: 'hidden'}} source={{ uri: item.image }} />
+          <Card.Cover style={{borderRadius: 10,overflow: 'hidden'}} source={{ uri: item.tempImage }} />
           <Card.Actions>
           <TouchableOpacity style={styles.button}
             onPress={() => {
@@ -119,10 +119,9 @@ const ItemsList = ({navigation}) => {
                 size: item.size,
                 price: item.price,
                 maxCap: item.maxCap,
-                image: item.image,
+                tempImage: item.tempImage,
                 address: item.address,
                 phone: item.phone,
-                pin: item.pin,
               });
             }} title='Description'
           >
@@ -150,6 +149,7 @@ const ItemsList = ({navigation}) => {
       
   return (
     <View style={{backgroundColor:"#DDE2E5"}}>
+      <StatusBar backgroundColor="#DDE2E5" barStyle={'dark-content'} />
       <FlatList 
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
