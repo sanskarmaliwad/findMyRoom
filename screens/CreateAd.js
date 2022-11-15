@@ -249,6 +249,13 @@ if(!isAdmin) return(
                 underlineColorAndroid='#FFF'
                 autoCorrect={false}
                 />
+
+            <SelectList
+                placeholder='Is Available For'
+                //defaultOption={data[2]} 
+                setSelected={(val) => setSelected(val)}
+                data={data}
+                save="value" />
             
             <TextInput style={styles.inputBox}
                 label="Your contact Number"
