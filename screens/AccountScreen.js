@@ -1,110 +1,131 @@
-import React,{useState,useEffect} from 'react'
-import { View, Text,FlatList,StyleSheet,Linking,Platform,TouchableOpacity } from 'react-native'
-import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
-import { auth } from '../firebase';
-import { store } from '../firebase';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Linking,
+  Platform,
+  TouchableOpacity,
+} from "react-native";
+import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
+import { auth } from "../firebase";
+import { store } from "../firebase";
 import { COLORS, FONTS, SIZES } from "../constants";
 
-
 const AccountScreen = () => {
-  const [items,setItems] = useState([])
-  const [loading,setLoading] = useState(false)
-  const getDetails = async ()=>{
-    const querySnap = await store.collection('ads')
-    .where('uid','==',auth.currentUser.uid).get()
-    const result =  querySnap.docs.map(docSnap=>docSnap.data())
-    console.log(result)
-    setItems(result)
-  }
-  const openDial = (phone)=>{
-    if(Platform.OS ==='android'){
-      Linking.openURL(`tel:${phone}`)
-    }else{
-      Linking.openURL(`telprompt:${phone}`)
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const getDetails = async () => {
+    const querySnap = await store
+      .collection("ads")
+      .where("uid", "==", auth.currentUser.uid)
+      .get();
+    const result = querySnap.docs.map((docSnap) => docSnap.data());
+    console.log(result);
+    setItems(result);
+  };
+  const openDial = (phone) => {
+    if (Platform.OS === "android") {
+      Linking.openURL(`tel:${phone}`);
+    } else {
+      Linking.openURL(`telprompt:${phone}`);
     }
-  }
-  useEffect(()=>{
-    getDetails()
-    return ()=>{
-      console.log("cleanup")
-    }
-  },[])
+  };
+  useEffect(() => {
+    getDetails();
+    return () => {
+      console.log("cleanup");
+    };
+  }, []);
 
-  const renderItem = (item)=>{
-    return(
-        <Card style={styles.card}>
-      <Card.Title title={item.LandMrk}  />
-      <Card.Content>
-        <Paragraph>Rs. {item.price}/-</Paragraph>
-      </Card.Content>
-      <Card.Cover style={{borderRadius: 10,overflow: 'hidden'}} source={{ uri: item.tempImage }} />
-      <Card.Actions>
-        {/* <Button onPress={()=>(openDial(item.phone))}>call seller</Button> */}
-      </Card.Actions>
-    </Card>  
-    )
-  }
+  const renderItem = (item) => {
+    return (
+      <Card style={styles.card}>
+        <Card.Title title={item.LandMrk} />
+        <Card.Content>
+          <Paragraph>Rs. {item.price}/-</Paragraph>
+        </Card.Content>
+        <Card.Cover
+          style={{ borderRadius: 10, overflow: "hidden" }}
+          source={{ uri: item.tempImage }}
+        />
+        <Card.Actions>
+          {/* <Button onPress={()=>(openDial(item.phone))}>call seller</Button> */}
+        </Card.Actions>
+      </Card>
+    );
+  };
 
   return (
     <View style={styles.container}>
-    
-      <FlatList showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
         data={items}
-        keyExtractor={(item)=>item.phone}
-        renderItem={({item})=>renderItem(item)}
-        onRefresh={()=>{
-          setLoading(true)
-          getDetails()
-          setLoading(false)
+        keyExtractor={(item) => item.phone}
+        renderItem={({ item }) => renderItem(item)}
+        onRefresh={() => {
+          setLoading(true);
+          getDetails();
+          setLoading(false);
         }}
         refreshing={loading}
         ListHeaderComponent={
           <View style={styles.flatListHeaderStyle}>
-    {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
-      <TouchableOpacity style={styles.button} onPress={()=> auth.signOut()} >
-        <Text style={styles.buttonText}>Logout</Text>
-      </TouchableOpacity>
-      <Text style={{color:'#DDE2E5', fontSize:15, marginTop: 10,alignSelf:'center'}}>Hostel Entries Will Appear Here...</Text>
-    </View>
+            {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => auth.signOut()}
+            >
+              <Text style={styles.buttonText}>Logout</Text>
+            </TouchableOpacity>
+            <Text
+              style={{
+                color: "#DDE2E5",
+                fontSize: 15,
+                marginTop: 10,
+                alignSelf: "center",
+              }}
+            >
+              Hostel Entries Will Appear Here...
+            </Text>
+          </View>
         }
       />
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
-  container:{
-    flex:1,
-    backgroundColor:"#DDE2E5",
+  container: {
+    flex: 1,
+    backgroundColor: "#DDE2E5",
   },
-  flatListHeaderStyle:{
-    
-    margin:10,
-    borderRadius:20,
+  flatListHeaderStyle: {
+    margin: 10,
+    borderRadius: 20,
     backgroundColor: COLORS.primary,
     padding: SIZES.font,
-
   },
-  card:{
-      margin:20,
-      elevation:10,
-      borderRadius: 20,
-      overflow: 'hidden',
-      padding: 10,
+  card: {
+    margin: 20,
+    elevation: 10,
+    borderRadius: 20,
+    overflow: "hidden",
+    padding: 10,
   },
-  button:{
-    margin:6,
+  button: {
+    margin: 6,
     backgroundColor: "#DDE2E5",
-    paddingHorizontal:15,
-    paddingVertical:5,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
     borderRadius: 25,
-    alignSelf:"center"
-
+    alignSelf: "center",
   },
   buttonText: {
-    color: COLORS.primary
- },
-   });
+    color: COLORS.primary,
+  },
+});
 
-export default AccountScreen
+export default AccountScreen;
