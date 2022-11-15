@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, Alert, Dimensions, KeyboardAvoidingView } from 'react-native'
+import { View, Text, StyleSheet, Alert, Dimensions, KeyboardAvoidingView,TouchableOpacity,Image } from 'react-native'
 import { TextInput, Button } from 'react-native-paper'
 import MapView, { Marker } from "react-native-maps";
 import * as Location from 'expo-location';
@@ -11,7 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Map = ({route, navigation}) => {
 
-  const {pin, setPin} = React.useContext(Context);
+  const {pin, setPin,isAdmin,setisAdmin} = React.useContext(Context);
   console.log(pin);
 
   // const [ pin, setPin ] = useState({
@@ -53,8 +53,7 @@ const Map = ({route, navigation}) => {
   }, []);
 
   return (
-    <View style={{ marginTop: 50, flex: 1 }}>
-
+    <View style={{ marginTop: 20, flex: 1 }}>
       <GooglePlacesAutocomplete
         placeholder='Search'
         fetchDetails={true} //can
@@ -93,7 +92,19 @@ const Map = ({route, navigation}) => {
       >
        <Marker coordinate={pin} title='Marker' />
       </MapView>
-      <Button title='Get Location' onPress={userLocation} />
+      
+      <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => navigation.goBack('add')}
+          style={styles.touchableOpacityStyle}>
+            
+          <Image
+
+            source={require('../assets/undo.png')}
+            style={styles.floatingButtonStyle}
+          />
+        </TouchableOpacity>
+        
 
     </View>
   )
@@ -110,6 +121,21 @@ const styles = StyleSheet.create({
   map: {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
+  },
+  touchableOpacityStyle: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 30,
+    bottom: 30,
+  },
+  floatingButtonStyle: {
+    resizeMode: 'contain',
+    width: 35,
+    height: 35,
+    //backgroundColor:'black'
   },
 });
 

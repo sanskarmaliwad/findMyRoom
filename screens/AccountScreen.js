@@ -1,8 +1,9 @@
 import React,{useState,useEffect} from 'react'
-import { View, Text,FlatList,StyleSheet,Linking,Platform } from 'react-native'
+import { View, Text,FlatList,StyleSheet,Linking,Platform,TouchableOpacity } from 'react-native'
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 import { auth } from '../firebase';
 import { store } from '../firebase';
+import { COLORS, FONTS, SIZES } from "../constants";
 
 
 const AccountScreen = () => {
@@ -34,11 +35,9 @@ const AccountScreen = () => {
         <Card style={styles.card}>
       <Card.Title title={item.LandMrk}  />
       <Card.Content>
-        <Paragraph>{item.desc}</Paragraph>
-        <Paragraph>{item.size}</Paragraph>
-        <Paragraph>{item.phone}</Paragraph>
+        <Paragraph>Rs. {item.price}/-</Paragraph>
       </Card.Content>
-      <Card.Cover source={{ uri: item.image }} />
+      <Card.Cover style={{borderRadius: 10,overflow: 'hidden'}} source={{ uri: item.tempImage }} />
       <Card.Actions>
         {/* <Button onPress={()=>(openDial(item.phone))}>call seller</Button> */}
       </Card.Actions>
@@ -47,15 +46,10 @@ const AccountScreen = () => {
   }
 
   return (
-    <View>
-    <View style={{height:'30%',justifyContent:'space-evenly', alignItems:"center"}}>
-    {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
-      <Button mode ="contained" onPress={()=> auth.signOut()} >
-        LogOut
-      </Button>
-      <Text style={{fontSize:25}}>Your Hostels!</Text>
-    </View>
-      <FlatList
+    <View style={styles.container}>
+    
+      <FlatList showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
         data={items}
         keyExtractor={(item)=>item.phone}
         renderItem={({item})=>renderItem(item)}
@@ -65,16 +59,52 @@ const AccountScreen = () => {
           setLoading(false)
         }}
         refreshing={loading}
+        ListHeaderComponent={
+          <View style={styles.flatListHeaderStyle}>
+    {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
+      <TouchableOpacity style={styles.button} onPress={()=> auth.signOut()} >
+        <Text style={styles.buttonText}>Logout</Text>
+      </TouchableOpacity>
+      <Text style={{color:'#DDE2E5', fontSize:15, marginTop: 10,alignSelf:'center'}}>Hostel Entries Will Appear Here...</Text>
+    </View>
+        }
       />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  container:{
+    flex:1,
+    backgroundColor:"#DDE2E5",
+  },
+  flatListHeaderStyle:{
+    
+    margin:10,
+    borderRadius:20,
+    backgroundColor: COLORS.primary,
+    padding: SIZES.font,
+
+  },
   card:{
-      margin:10,
-      elevation:2
-  }
+      margin:20,
+      elevation:10,
+      borderRadius: 20,
+      overflow: 'hidden',
+      padding: 10,
+  },
+  button:{
+    margin:6,
+    backgroundColor: "#DDE2E5",
+    paddingHorizontal:15,
+    paddingVertical:5,
+    borderRadius: 25,
+    alignSelf:"center"
+
+  },
+  buttonText: {
+    color: COLORS.primary
+ },
    });
 
 export default AccountScreen

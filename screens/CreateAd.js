@@ -1,5 +1,5 @@
 import React,{useState, useEffect} from 'react'
-import {ScrollView, View, Text,StyleSheet,Alert,Dimensions,KeyboardAvoidingView} from 'react-native'
+import {TouchableOpacity, ScrollView, View, Text,StyleSheet,Alert,Dimensions,KeyboardAvoidingView} from 'react-native'
 import { TextInput,Button} from 'react-native-paper'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker'
 import { Camera, CameraType } from 'expo-camera';
@@ -11,18 +11,21 @@ import MapInput, { MapInputVariant } from 'react-native-map-input';
 import * as Location from 'expo-location';
 import Map from './Map';
 import { Context } from '../Context';
+import { COLORS, FONTS, SIZES } from "../constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
-
+const storageRef = storage.ref();
 
 
 
 const CreateAd = ({navigation}) => {
 
-    const {pin,setPin} = React.useContext(Context);
 
+
+    const {pin,setPin,isAdmin,setisAdmin} = React.useContext(Context);
+    const [uploading,setUploading] = useState(false);
     // useEffect((e)=>{
     //     e.preventDefault();
     //   },[])
@@ -35,6 +38,7 @@ const CreateAd = ({navigation}) => {
     const [maxCap,setMaxcap] = useState('')
     const [address,setAddress] = useState('')
     const [image,setImage] = useState("");
+    const [tempImage,setTempImage] = useState("");
 
    
 
@@ -50,7 +54,7 @@ const CreateAd = ({navigation}) => {
               phone,
               maxCap,
               address,
-              image,
+              tempImage,
               pin,
               uid:auth.currentUser.uid
           })
@@ -71,41 +75,92 @@ const CreateAd = ({navigation}) => {
         }       
     }
 
-    const selectPhoto = async ()=>{
+
+    // start -------------------------
+
+    const pickImage = async () => {
+
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-          });
+            allowsEditing:true,
+            aspect: [4,3],
+            quality:1,
+        });
+
+        const source = {uri: result.uri};
+        console.log(source);
+        setImage(source);
+        setTempImage(source.uri);
+        console.log(source);
+    };
+
+    const uploadImage = async () => {
+        setUploading(true);
+        const response = await fetch(image.uri)
+        const blob = await response.blob();
+        const filename = Date.now();
+        var ref = storageRef.child(`${filename}`).put(blob);
+        ref.then((snapshot)=>{
+            ref.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                setTempImage(downloadURL)
+            });
+            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            if(progress==100){alert("uploaded"); console.log("uploaded")}
+        }
+        )
+
+        try{
+            await ref;
+        }catch(e){
+            console.log(e);
+        }
+        setUploading(false);
+        // Alert.alert('image uploaded..!!');
+        console.log(tempImage);
+    };
+
+    const echoo=()=>{
+        console.log(tempImage);
+    };
+
+
+    // -------------------------
+    // const selectPhoto = async ()=>{
+    //     let result = await ImagePicker.launchImageLibraryAsync({
+    //         mediaTypes: ImagePicker.MediaTypeOptions.All,
+    //         allowsEditing: true,
+    //         aspect: [4, 3],
+    //         quality: 1,
+    //       });
       
-          console.log(result.uri);
+    //       console.log(result.uri);
       
-          if (!result.cancelled) {
-            setImage(result.uri);
-            console.log(result.uri)
+    //       if (!result.cancelled) {
+    //         setImage(result.uri);
+    //         console.log(result.uri)
             
-          }
+    //       }
 
-          const uploadTask = storageRef.child(`/items/${Date.now()}`).putFile(result.uri)
+    //       const uploadTask = storageRef.child(`${Date.now()}`).putFile(result.uri)
 
-          uploadTask.on('state_changed', 
-            (snapshot) => {
+    //       uploadTask.on('state_changed', 
+    //         (snapshot) => {
                
-                var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                 if(progress==100){alert("uploaded")}
-            }, 
-            (error) => {
-               alert("something went wrong")
-            }, 
-            () => {
-                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+    //             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //              if(progress==100){alert("uploaded")}
+    //         }, 
+    //         (error) => {
+    //            alert("something went wrong")
+    //         }, 
+    //         () => {
+    //             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
 
-                    setImage(downloadURL)
-                });
-            }
-            );
-       }
+    //                 setImage(downloadURL)
+    //             });
+    //         }
+    //         );
+    //    }
+
 
     //    --------------------------------------------
     
@@ -134,18 +189,29 @@ const CreateAd = ({navigation}) => {
     //    }
     
     //    --------------------------------------------
-    
+if(!isAdmin) return(      
+            <View style={styles.container}>
+                <View style={styles.flatListHeaderStyle}>
+    {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
+      <TouchableOpacity style={styles.button} onPress={()=> auth.signOut()} >
+        <Text style={styles.buttonText}>Logout</Text>
+      </TouchableOpacity>
+      <Text style={{color:'#DDE2E5', fontSize:15, marginTop: 10,alignSelf:'center'}}>Post Your Entries Here..</Text>
+    </View>
+                <Text style={{textAlign:'center'}}>Sorry Only Hostel Owner's Can Post Entries</Text>
+            </View>)
        
-  return (
-
-    
+ else  return (
 
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}
   showsHorizontalScrollIndicator={false}>
+            <View style={styles.flatListHeaderStyle}>
+    {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
+      <Text style={{color:'#DDE2E5', fontSize:15,alignSelf:'center'}}>Post Your Entries Here..</Text>
+    </View>
             <TextInput style={styles.inputBox}
                 label="Land Mark"
                 value={LandMrk}
-                mode="outlined"
                 onChangeText={text => setLandMrk(text)}
                 />
             
@@ -154,13 +220,11 @@ const CreateAd = ({navigation}) => {
                 value={address}
                 numberOfLines={3}
                 multiline={true}
-                mode="outlined"
                 onChangeText={text => setAddress(text)}
                 />
             <TextInput style={styles.inputBox}
                 label="Describe room/place"
                 value={desc}
-                mode="outlined"
                 numberOfLines={5}
                 multiline={true}
                 onChangeText={text => setDesc(text)}
@@ -168,28 +232,27 @@ const CreateAd = ({navigation}) => {
             <TextInput style={styles.inputBox}
                 label="size of Room"
                 value={size}
-                mode="outlined"
                 // keyboardType="numeric"
                 onChangeText={text => setSize(text)}
                 />
             <TextInput style={styles.inputBox}
                 label="maximum capacity of room"
                 value={maxCap}
-                mode="outlined"
                 keyboardType="numeric"
                 onChangeText={text => setMaxcap(text)}
                 />
             <TextInput style={styles.inputBox}
                 label="price in INR"
                 value={price}
-                mode="outlined"
                 // keyboardType="numeric"
                 onChangeText={text => setPrice(text)}
+                underlineColorAndroid='#FFF'
+                autoCorrect={false}
                 />
+            
             <TextInput style={styles.inputBox}
                 label="Your contact Number"
                 value={phone}
-                mode="outlined"
                 keyboardType="numeric"
                 onChangeText={text => setPhone(text)}
                 />
@@ -201,9 +264,14 @@ const CreateAd = ({navigation}) => {
                     Set Location
                 </Button>
 
-                <Button style={styles.button} icon="camera"  mode="contained" onPress={() => selectPhoto()}>
+                <Button style={styles.button} icon="camera"  mode="contained" onPress={() => pickImage()}>
+                     pick Image
+                 </Button>
+                 
+                <Button style={styles.button} icon="camera"  mode="contained" onPress={() => uploadImage()}>
                      upload Image
                  </Button>
+
                 <Button style={styles.button} mode="contained" onPress={() => postData()}>
                      Post
                  </Button>
@@ -214,18 +282,19 @@ const CreateAd = ({navigation}) => {
 
 const styles = StyleSheet.create({
     inputBox:{
-        margin:2,
+        marginHorizontal:15,
+        marginVertical:5
 
     },
     button:{
-        margin:4,
+        marginHorizontal:15,
+        marginVertical:5,
         
     },
     container:{
         flex:1,
-        marginHorizontal:30,
-        // justifyContent:"space-evenly",
-        marginTop: 60,
+        backgroundColor:"#DDE2E5",
+
     },
     text:{
         fontSize:24,
@@ -234,6 +303,14 @@ const styles = StyleSheet.create({
     map: {
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
+      },
+      flatListHeaderStyle:{
+    
+        margin:10,
+        borderRadius:20,
+        backgroundColor: COLORS.primary,
+        padding: SIZES.font,
+    
       },
      });
      
