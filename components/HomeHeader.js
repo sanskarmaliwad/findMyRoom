@@ -2,7 +2,6 @@ import React from "react";
 import { StyleSheet, View, Text, Image, TextInput } from "react-native";
 import { Slider } from "@miblanchard/react-native-slider";
 import { COLORS, FONTS, SIZES } from "../constants";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 const HomeHeader = ({ onSearch, onSelectRange }) => {
   const [range, setRange] = React.useState(10000);
@@ -53,12 +52,12 @@ const HomeHeader = ({ onSearch, onSelectRange }) => {
           style={{
             fontFamily: FONTS.bold,
             fontSize: SIZES.large,
-            color: COLORS.white,
+            color: "#DDE2E5",
             marginTop: SIZES.base / 2,
             textAlign: "center",
           }}
         >
-          Find Your Perfect Room
+         Find Your Perfect Room
         </Text>
       </View>
 
@@ -84,22 +83,23 @@ const HomeHeader = ({ onSearch, onSelectRange }) => {
             style={{ flex: 1 }}
             onChangeText={onSearch}
           />
-          </View>
-          <View style={styles.container}>
-            <Slider
-              step={500}
-              thumbTintColor="#DDE2E5"
-              minimumTrackTintColor="#DDE2E5"
-              maximumTrackTintColor="grey"
-              value={range}
-              containerStyle={{color:"#DDE2E5"}}
-              maximumValue={20000}
-              onValueChange={(value) => setRange(value)}
-              onSlidingComplete={onSelectRange}
-            ></Slider>
-            <Text style={{color:"#DDE2E5"}}>Your Budget is not more than: {Math.floor(range)} Rs.</Text>
-          </View>
-        
+        </View>
+        <View style={styles.container}>
+          <Slider
+            step={500}
+            thumbTintColor="#DDE2E5"
+            minimumTrackTintColor="#DDE2E5"
+            maximumTrackTintColor="grey"
+            value={range}
+            containerStyle={{ color: "#DDE2E5" }}
+            maximumValue={20000}
+            onValueChange={(value) => setRange(value)}
+            onSlidingComplete={onSelectRange}
+          ></Slider>
+          <Text style={{ color: "#DDE2E5" }}>
+            Your Budget is not more than: {Math.floor(range)} Rs.
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     alignItems: "stretch",
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
 });
 
