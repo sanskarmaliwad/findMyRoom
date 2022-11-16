@@ -17,7 +17,8 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Context } from "../Context";
 
 const LoginScreen = ({ navigation }) => {
-  const { pin, setPin, isAdmin, setisAdmin } = React.useContext(Context);
+  const { pin, setPin,
+    isAdmin, setisAdmin} = React.useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 

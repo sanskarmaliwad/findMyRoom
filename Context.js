@@ -8,13 +8,13 @@ const Provider = ({ children }) => {
     longitude: 75.87278936058283,
   });
   const [isAdmin, setisAdmin] = React.useState(true);
+  const [sortingOption, setSortingOption] = React.useState(true);
   return (
     <Context.Provider
       value={{
-        pin,
-        setPin,
-        isAdmin,
-        setisAdmin,
+        pin, setPin,
+        isAdmin, setisAdmin,
+        sortingOption, setSortingOption,
       }}
     >
       {children}

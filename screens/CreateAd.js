@@ -28,7 +28,8 @@ import { color } from "react-native-reanimated";
 const storageRef = storage.ref();
 
 const CreateAd = ({ navigation }) => {
-  const { pin, setPin, isAdmin, setisAdmin } = React.useContext(Context);
+  const { pin, setPin,
+    isAdmin, setisAdmin} = React.useContext(Context);
   const [uploading, setUploading] = useState(false);
   // useEffect((e)=>{
   //     e.preventDefault();
