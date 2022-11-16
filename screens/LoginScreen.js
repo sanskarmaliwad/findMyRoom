@@ -17,31 +17,6 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Context } from "../Context";
 
 const LoginScreen = ({ navigation }) => {
-<<<<<<< HEAD
-
-    const {pin, setPin,isAdmin,setisAdmin} = React.useContext(Context);
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-
-
-    const userLogin = async () => {
-        if (!email || !password) {
-            Alert.alert("please enter all the fields")
-            return
-        } if (validator.validate(email) == false) {
-            Alert.alert("please enter valid email address")
-            return
-        }
-
-        try {
-            const result = await auth.signInWithEmailAndPassword(email, password)
-            console.log("Logged In")
-            console.log(result.user.email)
-        } catch (err) {
-            Alert.alert("Invalid credentials");
-            console.log(err);
-        }
-=======
   const { pin, setPin, isAdmin, setisAdmin } = React.useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -54,7 +29,6 @@ const LoginScreen = ({ navigation }) => {
     if (validator.validate(email) == false) {
       Alert.alert("please enter valid email address");
       return;
->>>>>>> 1ab1f85171a7eccee970ccc21264470da4f61157
     }
 
     try {
@@ -148,10 +122,4 @@ const styles = StyleSheet.create({
   },
 });
 
-<<<<<<< HEAD
-
-
-export default LoginScreen
-=======
 export default LoginScreen;
->>>>>>> 1ab1f85171a7eccee970ccc21264470da4f61157
