@@ -18,7 +18,8 @@ import { Context } from "../Context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Map = ({ route, navigation }) => {
-  const { pin, setPin, isAdmin, setisAdmin } = React.useContext(Context);
+  const { pin, setPin,
+    isAdmin, setisAdmin} = React.useContext(Context);
   console.log(pin);
 
   // const [ pin, setPin ] = useState({
