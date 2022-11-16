@@ -8,9 +8,10 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   Image,
+  SafeAreaView
 } from "react-native";
 import { TextInput, Button } from "react-native-paper";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Callout, Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Context } from "../Context";
@@ -18,7 +19,9 @@ import { Context } from "../Context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Map = ({ route, navigation }) => {
-  const { pin, setPin, isAdmin, setisAdmin } = React.useContext(Context);
+
+  const { pin, setPin} = React.useContext(Context);
+
   console.log(pin);
 
   // const [ pin, setPin ] = useState({
@@ -61,8 +64,8 @@ const Map = ({ route, navigation }) => {
   }, []);
 
   return (
-    <View style={{ marginTop: 20, flex: 1 }}>
-      <GooglePlacesAutocomplete
+    <SafeAreaView style={{ flex: 1 }}>
+      {/* <GooglePlacesAutocomplete
         placeholder="Search"
         fetchDetails={true} //can
         GooglePlacesSearchQuery={{
@@ -90,18 +93,36 @@ const Map = ({ route, navigation }) => {
           },
           listView: { backgroundColor: "white" },
         }}
-      />
+      /> */}
 
       <MapView
         style={styles.map}
         region={mapRegion}
+        showsUserLocation={true}
+        showsCompass={true}
+        showsBuildings={true}
+        showsIndoors={true}
         onPress={(event) => {
           setPin(event.nativeEvent.coordinate);
           console.log(pin);
         }}
       >
-        <Marker coordinate={pin} title="Marker" />
+        <Marker 
+          draggable={true}
+          onDragEnd={(e) => {
+            setPin({
+              latitude: e.nativeEvent.coordinate.latitude,
+              longitude: e.nativeEvent.coordinate.longitude
+            })
+            console.log(pin);
+          }}
+          coordinate={pin}>
+          <Callout>
+        <Text>Set this as Hostel's Location</Text>
+          </Callout>
+        </Marker>
       </MapView>
+      
 
       <TouchableOpacity
         activeOpacity={1}
@@ -113,7 +134,7 @@ const Map = ({ route, navigation }) => {
           style={styles.floatingButtonStyle}
         />
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -126,8 +147,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
   },
   map: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
+    width: "100%",
+    height: "100%",
+
   },
   touchableOpacityStyle: {
     position: "absolute",
@@ -135,7 +157,7 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    right: 30,
+    left: 30,
     bottom: 30,
   },
   floatingButtonStyle: {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   StatusBar,
   View,
@@ -17,9 +17,11 @@ import { COLORS } from "../constants";
 import { useAnimatedScrollHandler } from "react-native-reanimated";
 import codegenNativeCommands from "react-native/Libraries/Utilities/codegenNativeCommands";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Location, Permissions } from 'expo';
+import { Context } from "../Context";
 
 const ItemsList = ({ navigation }) => {
+  const { sortingOption, setSortingOption} = React.useContext(Context)
+
   const myitems = [
     {
       LandMrk: "abc mark",
@@ -198,13 +200,20 @@ const ItemsList = ({ navigation }) => {
     );
   };
 
+  const sortingMethod = (sortingOption) => {
+    console.log(sortingOption);
+    return ( sortingOption.value ? newData.sort((a,b) => a.price.localeCompare(b.price)) : (newData.sort((a,b) => a.price.localeCompare(b.price)).reverse()));
+  }
+
   return (
     <View style={{ backgroundColor: "#DDE2E5" }}>
       <StatusBar backgroundColor="#DDE2E5" barStyle={"dark-content"} />
       <FlatList
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        data={newData.sort((a,b) => a.price.localeCompare(b.price))}
+        
+        data={sortingMethod(sortingOption)}
+        // data={newData.sort((a,b) => a.price.localeCompare(b.price))}
         keyExtractor={(item) => item.phone}
         renderItem={({ item }) => renderItem(item)}
         onRefresh={() => {

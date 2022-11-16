@@ -1,11 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, Text, Image, TextInput } from "react-native";
 import { Slider } from "@miblanchard/react-native-slider";
 import { COLORS, FONTS, SIZES } from "../constants";
+
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { Button } from "react-native-paper";
+import { Dropdown } from "react-native-element-dropdown";
+import { block } from "react-native-reanimated";
+import { Context } from "../Context";
 
 const HomeHeader = ({ onSearch, onSelectRange }) => {
   const [range, setRange] = React.useState(10000);
+  const [isFocus, setIsFocus] = useState(false);
+
+  const { sortingOption, setSortingOption } = React.useContext(Context)
+
+  const data = [
+    { label: "Price: Low to High", value: true },
+    { label: "Price: High to Low", value: false },
+  ];
+
   return (
     <View
       style={{
@@ -53,12 +67,12 @@ const HomeHeader = ({ onSearch, onSelectRange }) => {
           style={{
             fontFamily: FONTS.bold,
             fontSize: SIZES.large,
-            color: COLORS.white,
+            color: "#DDE2E5",
             marginTop: SIZES.base / 2,
             textAlign: "center",
           }}
         >
-          Find Your Perfect Room
+         Find Your Perfect Room
         </Text>
       </View>
 
@@ -96,10 +110,28 @@ const HomeHeader = ({ onSearch, onSelectRange }) => {
               maximumValue={20000}
               onValueChange={(value) => setRange(value)}
               onSlidingComplete={onSelectRange}
-            ></Slider>
+            />
             <Text style={{color:"#DDE2E5"}}>Your Budget is not more than: {Math.floor(range)} Rs.</Text>
           </View>
-        
+
+          <Dropdown
+              style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={data}
+              labelField="label"
+              valueField="value"
+              placeholder={!isFocus ? "Sort By" : "..."}
+              value={sortingOption}
+              onFocus={() => setIsFocus(true)}
+              onBlur={() => setIsFocus(false)}
+              onChange={(item) => {
+              setSortingOption(item);
+              setIsFocus(false);
+            }}
+          />
       </View>
     </View>
   );
@@ -112,7 +144,48 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     alignItems: "stretch",
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
+  },
+  dropdown: {
+    height: 40,
+    width:'60%',
+    alignSelf:'center',
+    borderRadius:20,
+    textAlign:'center',
+    borderColor: "#B2B2B2",
+    borderBottomWidth: 0.5,
+    paddingHorizontal: 8,
+    marginHorizontal: 15,
+    marginVertical: 5,
+    elevation: 1,
+    backgroundColor: "#74858C",
+  },
+  icon: {
+    marginRight: 5,
+  },
+  label: {
+    position: "absolute",
+    backgroundColor: "white",
+    left: 22,
+    top: 8,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 14,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+    color: "#4D626C",
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+    color: "#4D626C",
+    textAlignVertical:'center',
+    overflow:'hidden'
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+    tintColor:'#4D626C',
   },
 });
 
