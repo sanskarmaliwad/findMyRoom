@@ -14,10 +14,10 @@ const SignupScreen = ({ navigation }) => {
 
         //console.log(email + ' ' + password + ' ' + confirmPassword);
         if (!email || !password || !confirmPassword) {
-            Alert.alert("please all all the fields");
+            Alert.alert("Please fill all the fields");
             return;
         } else if (validator.validate(email) == false) {
-            Alert.alert("please enter valid email address");
+            Alert.alert("Please enter valid email address");
             return;
         } else if (password.length < 8 || password.length > 20) {
             Alert.alert("Password should be min 8 char and max 20 char");
