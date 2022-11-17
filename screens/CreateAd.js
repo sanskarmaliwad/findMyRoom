@@ -29,7 +29,7 @@ const storageRef = storage.ref();
 
 const CreateAd = ({ navigation }) => {
   const { pin, setPin,
-    isAdmin, setisAdmin} = React.useContext(Context);
+    isAdmin, setisAdmin } = React.useContext(Context);
   const [uploading, setUploading] = useState(false);
   // useEffect((e)=>{
   //     e.preventDefault();
@@ -58,22 +58,31 @@ const CreateAd = ({ navigation }) => {
 
   const postData = async () => {
     try {
-      await store.collection("ads").add({
-        LandMrk,
-        desc,
-        size,
-        price,
-        phone,
-        maxCap,
-        address,
-        tempImage,
-        pin,
-        uid: auth.currentUser.uid,
-      });
+      if (!name || !LandMrk || !desc || !size || !price || !phone || !maxCap || !address || !image || !tempImage) {
+        Alert.alert("Please fill all the fields");
+        return;
+      } else if (phone.length != 10) {
+        Alert.alert("Phone Number is not valid");
+        return;
+      }
+      else {
+        await store.collection("ads").add({
+          LandMrk,
+          desc,
+          size,
+          price,
+          phone,
+          maxCap,
+          address,
+          tempImage,
+          pin,
+          uid: auth.currentUser.uid,
+        });
+      }
 
       Alert.alert("posted your Ad!");
-      
-      
+
+
       setName("");
       setLandMrk("");
       setDesc("");
