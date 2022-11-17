@@ -18,9 +18,10 @@ import { useAnimatedScrollHandler } from "react-native-reanimated";
 import codegenNativeCommands from "react-native/Libraries/Utilities/codegenNativeCommands";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Context } from "../Context";
+import * as Location from "expo-location";
 
 const ItemsList = ({ navigation }) => {
-  const { sortingOption, setSortingOption} = React.useContext(Context)
+  const { sortingOption, setSortingOption } = React.useContext(Context)
 
   const myitems = [
     {
@@ -66,7 +67,7 @@ const ItemsList = ({ navigation }) => {
   const getDetails = async () => {
     const querySnap = await store.collection("ads").get();
     const result = querySnap.docs.map((docSnap) => docSnap.data());
-    console.log(result);
+    //console.log(result);
     setItems(result);
     setNewData(result);
   };
@@ -79,8 +80,42 @@ const ItemsList = ({ navigation }) => {
     }
   };
 
+  async function getLocation() {
+    let { status } = await Location.requestPermissionsAsync();
+
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission not granted",
+        "Allow the app to use location service.",
+        [{ text: "OK" }],
+        { cancelable: false }
+      );
+    }
+
+    let { coords } = await Location.getCurrentPositionAsync();
+
+    if (coords) {
+      const { latitude, longitude } = coords;
+      let response = await Location.reverseGeocodeAsync({
+        latitude,
+        longitude,
+      });
+
+      console.log(latitude + " " + longitude);
+      //console.log(coords);
+
+      // for (let item of response) {
+      //   let address = `${item.name}, ${item.street}, ${item.postalCode}, ${item.city}`;
+
+      //   console.log(address);
+      // }
+    }
+
+  }
+
   useEffect(() => {
     getDetails();
+    getLocation();
     return () => {
       console.log("cleanup");
     };
@@ -90,7 +125,7 @@ const ItemsList = ({ navigation }) => {
     const filteredData = items.filter((item) => {
       // item.LandMrk.toLowerCase().includes(value.toLowerCase())
       if (
-        parseInt(item.price)<=range
+        parseInt(item.price) <= range
       ) {
         return true;
       }
@@ -136,7 +171,7 @@ const ItemsList = ({ navigation }) => {
           <Paragraph style={{ textAlign: "left" }}>Rs {item.price}/-</Paragraph>
           {/* <Paragraph>{item.desc}</Paragraph> */}
         </Card.Content>
-        <TouchableHighlight style={{borderRadius:10}}
+        <TouchableHighlight style={{ borderRadius: 10 }}
           onPress={() => {
             navigation.navigate("description", {
               desc: item.desc,
@@ -160,7 +195,7 @@ const ItemsList = ({ navigation }) => {
             style={styles.button}
             onPress={() => {
               navigation.navigate("description", {
-                name:item.name,
+                name: item.name,
                 desc: item.desc,
                 landMrk: item.LandMrk,
                 size: item.size,
@@ -202,16 +237,17 @@ const ItemsList = ({ navigation }) => {
 
   const sortingMethod = (sortingOption) => {
     console.log(sortingOption);
-    return ( sortingOption.value ? newData.sort((a,b) => a.price.localeCompare(b.price)) : (newData.sort((a,b) => a.price.localeCompare(b.price)).reverse()));
+    return (sortingOption.value ? newData.sort((a, b) => a.price.localeCompare(b.price)) : (newData.sort((a, b) => a.price.localeCompare(b.price)).reverse()));
   }
 
   return (
     <View style={{ backgroundColor: "#DDE2E5" }}>
+      {/* <Buttom title="Show my location" /> */}
       <StatusBar backgroundColor="#DDE2E5" barStyle={"dark-content"} />
       <FlatList
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        
+
         data={sortingMethod(sortingOption)}
         // data={newData.sort((a,b) => a.price.localeCompare(b.price))}
         keyExtractor={(item) => item.phone}
