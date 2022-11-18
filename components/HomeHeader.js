@@ -16,8 +16,10 @@ const HomeHeader = ({ onSearch, onSelectRange }) => {
   const { sortingOption, setSortingOption } = React.useContext(Context)
 
   const data = [
-    { label: "Price: Low to High", value: true },
-    { label: "Price: High to Low", value: false },
+    { label: "Price: Low to High", value: 0 },
+    { label: "Price: High to Low", value: 1 },
+    { label: "Distance: Closest to Farthest", value: 2 },
+    { label: "Distance: Farthest to Closest", value: 3 },
   ];
 
   return (
@@ -114,24 +116,27 @@ const HomeHeader = ({ onSearch, onSelectRange }) => {
             <Text style={{color:"#DDE2E5"}}>Your Budget is not more than: {Math.floor(range)} Rs.</Text>
           </View>
 
-          <Dropdown
-              style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              data={data}
-              labelField="label"
-              valueField="value"
-              placeholder={!isFocus ? "Sort By" : "..."}
-              value={sortingOption}
-              onFocus={() => setIsFocus(true)}
-              onBlur={() => setIsFocus(false)}
-              onChange={(item) => {
-              setSortingOption(item);
-              setIsFocus(false);
-            }}
-          />
+          <View>
+            <View style={styles.sortByLabel}><Text >Sort By: </Text></View>
+            <Dropdown
+                style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                inputSearchStyle={styles.inputSearchStyle}
+                iconStyle={styles.iconStyle}
+                data={data}
+                labelField="label"
+                valueField="value"
+                placeholder={!isFocus ? "Sort By" : "..."}
+                value={sortingOption}
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                onChange={(item) => {
+                setSortingOption(item);
+                setIsFocus(false);
+              }}
+            />
+          </View>
       </View>
     </View>
   );
@@ -149,7 +154,7 @@ const styles = StyleSheet.create({
   dropdown: {
     height: 40,
     width:'60%',
-    alignSelf:'center',
+    // alignSelf:'center',
     borderRadius:20,
     textAlign:'center',
     borderColor: "#B2B2B2",
@@ -186,6 +191,10 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     tintColor:'#4D626C',
+  },
+  sortByLabel: {
+    width: "20%",
+    flex: 1,
   },
 });
 
