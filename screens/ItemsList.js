@@ -20,6 +20,7 @@ import codegenNativeCommands from "react-native/Libraries/Utilities/codegenNativ
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Context } from "../Context";
 import * as Location from "expo-location";
+import * as geolib from 'geolib';
 
 const ItemsList = ({ navigation }) => {
 
@@ -90,7 +91,7 @@ const ItemsList = ({ navigation }) => {
   };
 
   async function getLocation() {
-    let { status } = await Location.requestPermissionsAsync();
+    let { status } = await Location.requestForegroundPermissionsAsync();
 
     if (status !== "granted") {
       Alert.alert(
@@ -114,8 +115,6 @@ const ItemsList = ({ navigation }) => {
         latitude: latitude,
         longitude: longitude
       });
-      
-       console.log(coordinates);
      // console.log(latitude + " " + longitude);
       //console.log(items);
       //console.log(coords);
@@ -186,6 +185,7 @@ const ItemsList = ({ navigation }) => {
 
         <Card.Content>
           <Paragraph style={{ textAlign: "left" }}>Rs {item.price}/-</Paragraph>
+          <Paragraph>Hostel is just {geolib.getDistance(item.pin,coordinates)/1000} km. away from you</Paragraph>
           {/* <Paragraph>{item.desc}</Paragraph> */}
         </Card.Content>
         <TouchableHighlight style={{ borderRadius: 10 }}
@@ -200,12 +200,13 @@ const ItemsList = ({ navigation }) => {
               address: item.address,
               phone: item.phone,
               pin: item.pin,
+              urls: item.urls,
             });
           }}
         > 
           <Card.Cover
             style={{ borderRadius: 10, overflow: "hidden" }}
-            source={{ uri: item.tempImage }}
+            source={{ uri: "https://i.pinimg.com/236x/09/48/e2/0948e2debd1e27f939fcd90590441845.jpg" }}
           />
 
         </TouchableHighlight>
@@ -224,6 +225,7 @@ const ItemsList = ({ navigation }) => {
                 tempImage: item.tempImage,
                 address: item.address,
                 phone: item.phone,
+                pin: item.pin,
                 urls: item.urls,
               });
             }}
@@ -256,7 +258,6 @@ const ItemsList = ({ navigation }) => {
   };
 
   const sortingMethod = (sortingOption) => {
-    console.log(sortingOption);
     return (sortingOption.value ? newData.sort((a, b) => a.price.localeCompare(b.price)) : (newData.sort((a, b) => a.price.localeCompare(b.price)).reverse()));
   }
 
