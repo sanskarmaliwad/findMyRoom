@@ -113,6 +113,8 @@ const CreateAd = ({ navigation }) => {
 
   const pickImage1 = async () => {
 
+    
+
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsMultipleSelection: true,
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -120,11 +122,21 @@ const CreateAd = ({ navigation }) => {
       aspect: [4, 3],
       quality: 1,
     });
-    const target = result.selected;  // equal to target.files
-
+    // console.log(result);
+    // const target = result.selected;  // equal to target.files
+    var target = [];
+    if(!result.hasOwnProperty("selected")) {
+      target = [result];
+      // console.log("running");
+    } else {
+      target = result.selected;
+    }
     // console.log(target);
 
+    // console.log(target.length);
+
     for (let i = 0; i < target.length; i++) {
+      // console.log(target);
       const newImage = target[i];
       newImage["id"] = Math.random();
       setImages((prevState) => [...prevState, newImage]);
@@ -134,7 +146,7 @@ const CreateAd = ({ navigation }) => {
   };
 
   const uplaod1New = async () => {
-    console.log(images);
+    // console.log(images);
     let cnt = 1;
     setLoading(true);
     images.map(async (image) => {
@@ -324,7 +336,7 @@ else
                 onBlur={() => setIsFocus(false)}
                 onChange={(item) => {
                   console.log(item);
-                  setIsAvailableFor(item);
+                  setIsAvailableFor(item.value);
                   setIsFocus(false);
                 }}
               />

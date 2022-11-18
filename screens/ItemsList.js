@@ -73,7 +73,7 @@ const ItemsList = ({ navigation }) => {
   const getDetails = async () => {
     const querySnap = await store.collection("ads").get();
     const result = querySnap.docs.map((docSnap) => docSnap.data());
-    console.log(result);
+    // console.log(result);
     setItems(result);
     setNewData(result);
   };
