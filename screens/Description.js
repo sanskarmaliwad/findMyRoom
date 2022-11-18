@@ -117,6 +117,13 @@ const Description = ({ route, navigation }) => {
           <View style={styles.lineStyle} />
 
           <View style={{ marginTop: 5 }}>
+            <Title style={{ padding: 5 }}>Capacity</Title>
+            <Text style={styles.text}>{size} Beds</Text>
+          </View>
+
+          <View style={styles.lineStyle} />
+
+          <View style={{ marginTop: 5 }}>
             <Title style={{ padding: 5 }}>Address</Title>
             <Text style={styles.text}>{address}</Text>
           </View>
@@ -124,7 +131,7 @@ const Description = ({ route, navigation }) => {
           <View style={styles.lineStyle} />
 
           <View style={{ marginTop: 5 }}>
-            <Title style={{ padding: 5 }}>LandMark</Title>
+            <Title style={{ padding: 5 }}>LandMark/Locality</Title>
             <Text style={styles.text}>{landMrk}</Text>
           </View>
 
@@ -133,13 +140,6 @@ const Description = ({ route, navigation }) => {
           <View style={{ marginTop: 5 }}>
             <Title style={{ padding: 5 }}>Contact No.</Title>
             <Text style={styles.text}>+91 {phone}</Text>
-          </View>
-
-          <View style={styles.lineStyle} />
-
-          <View style={{ marginTop: 5 }}>
-            <Title style={{ padding: 5 }}>Capacity</Title>
-            <Text style={styles.text}>{size} Beds</Text>
           </View>
         </View>
       </View>
