@@ -57,12 +57,7 @@ const Description = ({ route, navigation }) => {
       showsHorizontalScrollIndicator={false}
     >
       <View style={{ marginBottom: 20 }}>
-        {/* <Image style={{height:Dimensions.get('window').height/3, borderRadius:20, marginBottom:20}}
-          source={{
-            uri : tempImage,
-          }}
-          
-        /> */}
+
         <View style={{ height: HEIGHT / 3, width: WIDTH }}>
           <ScrollView
             onScroll={({ nativeEvent }) => onChange(nativeEvent)}
@@ -73,7 +68,7 @@ const Description = ({ route, navigation }) => {
           >
             {urls.map((e, index) => (
               <Image
-                key={index}
+                key={e}
                 resizeMode="cover"
                 style={{ height: HEIGHT / 3, width: WIDTH, marginBottom: 20 }}
                 source={{ uri: e }}

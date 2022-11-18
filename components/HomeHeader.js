@@ -18,8 +18,8 @@ const HomeHeader = ({ onSearch, onSelectRange }) => {
   const data = [
     { label: "Price: Low to High", value: 0 },
     { label: "Price: High to Low", value: 1 },
-    { label: "Distance: Closest to Farthest", value: 2 },
-    { label: "Distance: Farthest to Closest", value: 3 },
+    { label: "Nearest First", value: 2 },
+    { label: "Nearest Last", value: 3 },
   ];
 
   return (
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
   dropdown: {
     height: 40,
     width:'60%',
-    // alignSelf:'center',
+    alignSelf:'center',
     borderRadius:20,
     textAlign:'center',
     borderColor: "#B2B2B2",
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     marginVertical: 5,
     elevation: 1,
-    backgroundColor: "#74858C",
+    backgroundColor: "#B2B2B2",
   },
   icon: {
     marginRight: 5,
