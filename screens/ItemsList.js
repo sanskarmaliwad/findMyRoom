@@ -62,6 +62,11 @@ const ItemsList = ({ navigation }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newData, setNewData] = useState(items);
+  const [coordinates, setCoordinates] = useState({
+    latitude: 0,
+    longitude: 0
+  });
+
   const range = 4000;
 
   const getDetails = async () => {
@@ -100,8 +105,15 @@ const ItemsList = ({ navigation }) => {
         latitude,
         longitude,
       });
-
-      console.log(latitude + " " + longitude);
+      
+      setCoordinates({
+        latitude: latitude,
+        longitude: longitude
+      });
+      
+       console.log(coordinates);
+     // console.log(latitude + " " + longitude);
+      //console.log(items);
       //console.log(coords);
 
       // for (let item of response) {
@@ -114,8 +126,9 @@ const ItemsList = ({ navigation }) => {
   }
 
   useEffect(() => {
-    getDetails();
+
     getLocation();
+    getDetails();
     return () => {
       console.log("cleanup");
     };
