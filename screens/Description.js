@@ -1,9 +1,18 @@
 import React,{useState, useEffect} from 'react'
-import { View, Text,StyleSheet,Alert,Dimensions,KeyboardAvoidingView, ScrollView, Image} from 'react-native'
+import { View, Text,StyleSheet,Alert,Dimensions,KeyboardAvoidingView, ScrollView, Image, ImageStore} from 'react-native'
 import { TextInput,Button,Title} from 'react-native-paper'
 
 const Description = ({route, navigation}) => {
-  const {name, desc, landMrk, size, isAvailableFor, price, maxCap, tempImage, address, phone} = route.params;
+  // const images = ["https://www.shutterstock.com/image-photo/word-link-serious-businessman-hands-600w-180015809.jpg","https://www.shutterstock.com/image-photo/word-link-serious-businessman-hands-600w-180015809.jpg","https://www.shutterstock.com/image-photo/word-link-serious-businessman-hands-600w-180015809.jpg"];
+  // const onchange = (nativeEvent) => {
+  //   if(nativeEvent) {
+  //     const slide = Math.ceil(nativeEvent.contentOffset.x / nativeEvent.layiutMeasurement.width);
+  //     if (slide != imgActive) {
+  //       setimgActive(slide);
+  //     }
+  //   }
+  // }
+  const {name, desc, landMrk, size, isAvailableFor, price, maxCap, tempImage, address, phone, urls} = route.params;
   return (
     // <View style={{ flex: 1, justifyContent: 'center', padding: 12 }}>
 
@@ -19,12 +28,33 @@ const Description = ({route, navigation}) => {
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}>
        <View style={{marginBottom:20}}>
+        <View styles={{height:"40%", width:"100%"}}>
         <Image style={{height:Dimensions.get('window').height/3, borderRadius:20, marginBottom:20}}
           source={{
             uri : tempImage,
           }}
           
         />
+          {/* <ScrollView
+            onScroll={({nativeEvent}) => onchange(nativeEvent)}
+            showsHorizontalScrollIndicator={false}
+            paddingEnabled
+            horizontal
+            style={{height:"20%", width:"100%"}}
+          >
+            {
+              images.map((e, index) =>
+                <Image
+                  key={e}
+                  resizeMode='stretch'
+                  source={{uri: e}}
+                  style={{height:"40%", width:"100%"}}
+                />
+              )
+            }
+
+          </ScrollView> */}
+        </View>
         <View style={{marginTop:5}}>
          <Title style={{padding:5}}>Name</Title>
          <Text style = {styles.text}>{name}</Text>

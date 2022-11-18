@@ -9,6 +9,7 @@ import {
   Platform,
   TouchableOpacity,
   TouchableHighlight,
+  ScrollView,
 } from "react-native";
 import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
 import { store } from "../firebase";
@@ -21,7 +22,9 @@ import { Context } from "../Context";
 import * as Location from "expo-location";
 
 const ItemsList = ({ navigation }) => {
+
   const { sortingOption, setSortingOption } = React.useContext(Context)
+
 
   const myitems = [
     {
@@ -76,6 +79,15 @@ const ItemsList = ({ navigation }) => {
     setItems(result);
     setNewData(result);
   };
+
+  const onchange = (nativeEvent) => {
+    if(nativeEvent) {
+      const slide = Math.ceil(nativeEvent.contentOffset.x / nativeEvent.layiutMeasurement.width);
+      if (slide != imgActive) {
+        setimgActive(slide);
+      }
+    }
+  }
 
   const openDial = (phone) => {
     if (Platform.OS === "android") {
@@ -197,11 +209,12 @@ const ItemsList = ({ navigation }) => {
               phone: item.phone,
             });
           }}
-        >
+        > 
           <Card.Cover
             style={{ borderRadius: 10, overflow: "hidden" }}
             source={{ uri: item.tempImage }}
           />
+
         </TouchableHighlight>
         <Card.Actions>
           <TouchableOpacity
@@ -218,6 +231,7 @@ const ItemsList = ({ navigation }) => {
                 tempImage: item.tempImage,
                 address: item.address,
                 phone: item.phone,
+                urls: item.urls,
               });
             }}
             title="Description"
