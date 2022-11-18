@@ -32,9 +32,9 @@ const Description = ({ route, navigation }) => {
   const {
     name,
     desc,
+    isAvailableFor,
     landMrk,
     size,
-    isAvailableFor,
     price,
     address,
     phone,

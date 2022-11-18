@@ -32,7 +32,7 @@ const CreateAd = ({ navigation }) => {
     { label: "Common", value: "Common" },
   ];
 
-  const [isAvailableFor, setIsAvailableFor] = useState(null);
+  const [isAvailableFor, setIsAvailableFor] = useState("");
   const [isFocus, setIsFocus] = useState(false);
   const [name, setName] = useState("");
   const [LandMrk, setLandMrk] = useState("");
@@ -55,6 +55,7 @@ const CreateAd = ({ navigation }) => {
         name,
         LandMrk,
         desc,
+        isAvailableFor,
         size,
         price,
         phone,
@@ -78,7 +79,7 @@ const CreateAd = ({ navigation }) => {
       setAddress("");
       setImages([]);
       setUrls([]);
-      setIsAvailableFor(null);
+      setIsAvailableFor("");
 
     } catch (err) {
       console.log(err);
@@ -101,6 +102,8 @@ const CreateAd = ({ navigation }) => {
 
   const pickImage1 = async () => {
 
+    
+
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsMultipleSelection: true,
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -108,11 +111,21 @@ const CreateAd = ({ navigation }) => {
       aspect: [4, 3],
       quality: 1,
     });
-    const target = result.selected;  // equal to target.files
-
+    // console.log(result);
+    // const target = result.selected;  // equal to target.files
+    var target = [];
+    if(!result.hasOwnProperty("selected")) {
+      target = [result];
+      // console.log("running");
+    } else {
+      target = result.selected;
+    }
     // console.log(target);
 
+    // console.log(target.length);
+
     for (let i = 0; i < target.length; i++) {
+      // console.log(target);
       const newImage = target[i];
       newImage["id"] = Math.random();
       setImages((prevState) => [...prevState, newImage]);
@@ -122,7 +135,7 @@ const CreateAd = ({ navigation }) => {
   };
 
   const uplaod1New = async () => {
-    console.log(images);
+    // console.log(images);
     let cnt = 1;
     setLoading(true);
     images.map(async (image) => {
@@ -311,7 +324,8 @@ else
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
                 onChange={(item) => {
-                  setIsAvailableFor(item);
+                  console.log(item);
+                  setIsAvailableFor(item.value);
                   setIsFocus(false);
                 }}
               />
