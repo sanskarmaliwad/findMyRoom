@@ -40,7 +40,7 @@ const CreateAd = ({ navigation }) => {
   const [size, setSize] = useState("");
   const [price, setPrice] = useState("");
   const [phone, setPhone] = useState("");
-  const [maxCap, setMaxcap] = useState("");
+  // const [maxCap, setMaxcap] = useState("");
   const [address, setAddress] = useState("");
 
   const [images, setImages] = useState([]);
@@ -59,7 +59,7 @@ const CreateAd = ({ navigation }) => {
         size,
         price,
         phone,
-        maxCap,
+        // maxCap,
         urls,
         address,
         pin,
@@ -333,18 +333,18 @@ else
 
             <TextInput
               style={styles.inputBox}
-              label="size of Room"
+              label="Size of Room (Number of Beds)"
               value={size}
               // keyboardType="numeric"
               onChangeText={(text) => setSize(text)}
             />
-            <TextInput
+            {/* <TextInput
               style={styles.inputBox}
               label="Maximum Capacity of room"
               value={maxCap}
               keyboardType="numeric"
               onChangeText={(text) => setMaxcap(text)}
-            />
+            /> */}
             <TextInput
               style={styles.inputBox}
               label="Price in INR"
