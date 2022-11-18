@@ -115,28 +115,24 @@ const HomeHeader = ({ onSearch, onSelectRange }) => {
             />
             <Text style={{color:"#DDE2E5"}}>Your Budget is not more than: {Math.floor(range)} Rs.</Text>
           </View>
-
-          <View>
-            <View style={styles.sortByLabel}><Text >Sort By: </Text></View>
-            <Dropdown
-                style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                inputSearchStyle={styles.inputSearchStyle}
-                iconStyle={styles.iconStyle}
-                data={data}
-                labelField="label"
-                valueField="value"
-                placeholder={!isFocus ? "Sort By" : "..."}
-                value={sortingOption}
-                onFocus={() => setIsFocus(true)}
-                onBlur={() => setIsFocus(false)}
-                onChange={(item) => {
-                setSortingOption(item);
-                setIsFocus(false);
-              }}
-            />
-          </View>
+          <Dropdown
+              style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={data}
+              labelField="label"
+              valueField="value"
+              placeholder={!isFocus ? "Sort By" : "..."}
+              value={sortingOption}
+              onFocus={() => setIsFocus(true)}
+              onBlur={() => setIsFocus(false)}
+              onChange={(item) => {
+              setSortingOption(item);
+              setIsFocus(false);
+            }}
+          />
       </View>
     </View>
   );
