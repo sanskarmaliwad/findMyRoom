@@ -76,6 +76,7 @@ const CreateAd = ({ navigation }) => {
           address,
           tempImage,
           pin,
+          urls,
           uid: auth.currentUser.uid,
         });
       }

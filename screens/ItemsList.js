@@ -65,7 +65,6 @@ const ItemsList = ({ navigation }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newData, setNewData] = useState(items);
-  const range = 4000;
 
   const getDetails = async () => {
     const querySnap = await store.collection("ads").get();
@@ -75,14 +74,6 @@ const ItemsList = ({ navigation }) => {
     setNewData(result);
   };
 
-  const onchange = (nativeEvent) => {
-    if(nativeEvent) {
-      const slide = Math.ceil(nativeEvent.contentOffset.x / nativeEvent.layiutMeasurement.width);
-      if (slide != imgActive) {
-        setimgActive(slide);
-      }
-    }
-  }
 
   const openDial = (phone) => {
     if (Platform.OS === "android") {
@@ -194,6 +185,7 @@ const ItemsList = ({ navigation }) => {
               tempImage: item.tempImage,
               address: item.address,
               phone: item.phone,
+              pin: item.pin,
             });
           }}
         > 
