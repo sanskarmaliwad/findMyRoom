@@ -73,7 +73,7 @@ const ItemsList = ({ navigation }) => {
   const getDetails = async () => {
     const querySnap = await store.collection("ads").get();
     const result = querySnap.docs.map((docSnap) => docSnap.data());
-    //console.log(result);
+    // console.log(result);
     setItems(result);
     setNewData(result);
   };
@@ -188,12 +188,13 @@ const ItemsList = ({ navigation }) => {
         <TouchableHighlight style={{ borderRadius: 10 }}
           onPress={() => {
             navigation.navigate("description", {
+              name: item.name,
               desc: item.desc,
+              isAvailableFor: item.isAvailableFor,
               landMrk: item.LandMrk,
               size: item.size,
               price: item.price,
               maxCap: item.maxCap,
-              tempImage: item.tempImage,
               address: item.address,
               phone: item.phone,
               pin: item.pin,
@@ -203,7 +204,7 @@ const ItemsList = ({ navigation }) => {
         > 
           <Card.Cover
             style={{ borderRadius: 10, overflow: "hidden" }}
-            source={{ uri: "https://i.pinimg.com/236x/09/48/e2/0948e2debd1e27f939fcd90590441845.jpg" }}
+            source={{ uri: item.urls[0]}}
           />
 
         </TouchableHighlight>
@@ -219,7 +220,6 @@ const ItemsList = ({ navigation }) => {
                 isAvailableFor: item.isAvailableFor,
                 price: item.price,
                 maxCap: item.maxCap,
-                tempImage: item.tempImage,
                 address: item.address,
                 phone: item.phone,
                 pin: item.pin,

@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
   Dimensions,
+  ActivityIndicator,
   KeyboardAvoidingView,
 } from "react-native";
 import { TextInput, Button } from "react-native-paper";
@@ -41,9 +42,8 @@ const CreateAd = ({ navigation }) => {
     { label: "Common", value: "Common" },
   ];
 
-  const [isAvailableFor, setIsAvailableFor] = useState(null);
+  const [isAvailableFor, setIsAvailableFor] = useState("");
   const [isFocus, setIsFocus] = useState(false);
-
   const [name, setName] = useState("");
   const [LandMrk, setLandMrk] = useState("");
   const [desc, setDesc] = useState("");
@@ -53,33 +53,28 @@ const CreateAd = ({ navigation }) => {
   const [maxCap, setMaxcap] = useState("");
   const [address, setAddress] = useState("");
   const [image, setImage] = useState("");
-  const [tempImage, setTempImage] = useState("");
+
+  const [images, setImages] = useState([]);
+  const [urls, setUrls] = useState([]);
+  const [progress, setProgress] = useState(0);
+  const [loading, setLoading] = useState(false);
 
 
   const postData = async () => {
     try {
-      if (!name || !LandMrk || !desc || !size || !price || !phone || !maxCap || !address || !image || !tempImage) {
-        Alert.alert("Please fill all the fields");
-        return;
-      } else if (phone.length != 10) {
-        Alert.alert("Phone Number is not valid");
-        return;
-      }
-      else {
-        await store.collection("ads").add({
-          LandMrk,
-          desc,
-          size,
-          price,
-          phone,
-          maxCap,
-          address,
-          tempImage,
-          pin,
-          urls,
-          uid: auth.currentUser.uid,
-        });
-      }
+      await store.collection("ads").add({
+        LandMrk,
+        desc,
+        isAvailableFor,
+        size,
+        price,
+        phone,
+        maxCap,
+        urls,
+        address,
+        pin,
+        uid: auth.currentUser.uid,
+      });
 
       Alert.alert("posted your Ad!");
 
@@ -93,7 +88,9 @@ const CreateAd = ({ navigation }) => {
       setMaxcap("");
       setAddress("");
       setImage("");
-      setIsAvailableFor(null);
+      setImages([]);
+      setUrls([]);
+      setIsAvailableFor("");
 
     } catch (err) {
       console.log(err);
@@ -103,283 +100,333 @@ const CreateAd = ({ navigation }) => {
 
   // start -------------------------
 
-  const pickImage = async () => {
+  const commonFun = async() => {
+    pickImage1();
+    // console.log("running");
+    // let status = await pickImage1();
+    // console.log(status);
+    // if(status){
+    //   console.log("running when status true");
+    //   uplaod1New();
+    // }
+  }
+
+  const pickImage1 = async () => {
+
+    
+
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
+      allowsMultipleSelection: true,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      selectionLimit: 5,
       aspect: [4, 3],
       quality: 1,
     });
-
-    const source = { uri: result.uri };
-    console.log(source);
-    setImage(source);
-    setTempImage(source.uri);
-    console.log(source);
-  };
-
-  const uploadImage = async () => {
-    setUploading(true);
-    const response = await fetch(image.uri);
-    const blob = await response.blob();
-    const filename = Date.now();
-    var ref = storageRef.child(`${filename}`).put(blob);
-    ref.then((snapshot) => {
-      ref.snapshot.ref.getDownloadURL().then((downloadURL) => {
-        setTempImage(downloadURL);
-      });
-      var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      if (progress == 100) {
-        alert("uploaded");
-        console.log("uploaded");
-      }
-    });
-
-    try {
-      await ref;
-    } catch (e) {
-      console.log(e);
+    // console.log(result);
+    // const target = result.selected;  // equal to target.files
+    var target = [];
+    if(!result.hasOwnProperty("selected")) {
+      target = [result];
+      // console.log("running");
+    } else {
+      target = result.selected;
     }
-    setUploading(false);
-    // Alert.alert('image uploaded..!!');
-    console.log(tempImage);
+    // console.log(target);
+
+    // console.log(target.length);
+
+    for (let i = 0; i < target.length; i++) {
+      // console.log(target);
+      const newImage = target[i];
+      newImage["id"] = Math.random();
+      setImages((prevState) => [...prevState, newImage]);
+    }
+    // if(result)return true;
+    // await uplaod1New();
   };
 
-  const echoo = () => {
-    console.log(tempImage);
-  };
+  const uplaod1New = async () => {
+    // console.log(images);
+    let cnt = 1;
+    setLoading(true);
+    images.map(async (image) => {
 
-  // -------------------------
-  // const selectPhoto = async ()=>{
-  //     let result = await ImagePicker.launchImageLibraryAsync({
-  //         mediaTypes: ImagePicker.MediaTypeOptions.All,
-  //         allowsEditing: true,
-  //         aspect: [4, 3],
-  //         quality: 1,
-  //       });
+      const response = await fetch(image.uri)
+      const blob = await response.blob();
+      const filename = Date.now();
+      var ref = storageRef.child(`/images/${filename}`).put(blob);
 
-  //       console.log(result.uri);
+      ref.then((snapshot) => {
+        ref.snapshot.ref.getDownloadURL().then((downloadURL) => {
+          setUrls((prevState) => [...prevState, downloadURL]);
+        });
 
-  //       if (!result.cancelled) {
-  //         setImage(result.uri);
-  //         console.log(result.uri)
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setProgress(progress);
+        var message = "uploaded image" + cnt;
+        if (progress == 100) { console.log(message); cnt++; }
+        if (cnt === images.length + 1) {
+          console.log("all done."); alert("all done!"); setLoading(false);}
+      }
+      );
+    }
+    );
+  }
 
-  //       }
+// console.log("images: ", images);
+// console.log("urls", urls);
 
-  //       const uploadTask = storageRef.child(`${Date.now()}`).putFile(result.uri)
+// -------------------------
+// const selectPhoto = async ()=>{
+//     let result = await ImagePicker.launchImageLibraryAsync({
+//         mediaTypes: ImagePicker.MediaTypeOptions.All,
+//         allowsEditing: true,
+//         aspect: [4, 3],
+//         quality: 1,
+//       });
 
-  //       uploadTask.on('state_changed',
-  //         (snapshot) => {
+//       console.log(result.uri);
 
-  //             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-  //              if(progress==100){alert("uploaded")}
-  //         },
-  //         (error) => {
-  //            alert("something went wrong")
-  //         },
-  //         () => {
-  //             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+//       if (!result.cancelled) {
+//         setImage(result.uri);
+//         console.log(result.uri)
 
-  //                 setImage(downloadURL)
-  //             });
-  //         }
-  //         );
-  //    }
+//       }
 
-  //    --------------------------------------------
+//       const uploadTask = storageRef.child(`${Date.now()}`).putFile(result.uri)
 
-  // const openCamera = ()=>{
-  //     launchImageLibrary({quality:0.5},(fileobj)=>{
-  //         const uploadTask =  storage().ref().child(`/items/${Date.now()}`).putFile(fileobj.uri)
-  //         uploadTask.on('state_changed',
-  //         (snapshot) => {
+//       uploadTask.on('state_changed',
+//         (snapshot) => {
 
-  //             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-  //              if(progress==100){alert("uploaded")}
-  //         },
-  //         (error) => {
-  //            alert("something went wrong")
-  //         },
-  //         () => {
-  //             // Handle successful uploads on complete
-  //             // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-  //             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+//             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+//              if(progress==100){alert("uploaded")}
+//         },
+//         (error) => {
+//            alert("something went wrong")
+//         },
+//         () => {
+//             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
 
-  //                 setImage(downloadURL)
-  //             });
-  //         }
-  //         );
-  //        })
-  //    }
+//                 setImage(downloadURL)
+//             });
+//         }
+//         );
+//    }
 
-  //    --------------------------------------------
-  if (!isAdmin)
-    return (
-      <View style={styles.container}>
-        <View style={styles.flatListHeaderStyle}>
-          {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => auth.signOut()}
-          >
-            <Text style={styles.buttonText}>Logout</Text>
-          </TouchableOpacity>
-          <Text
-            style={{
-              color: "#DDE2E5",
-              fontSize: 15,
-              marginTop: 10,
-              alignSelf: "center",
-            }}
-          >
-            Post Your Entries Here..
-          </Text>
-        </View>
-        <Text style={{ textAlign: "center" }}>
-          Sorry Only Hostel Owner's Can Post Entries
+//    --------------------------------------------
+
+// const openCamera = ()=>{
+//     launchImageLibrary({quality:0.5},(fileobj)=>{
+//         const uploadTask =  storage().ref().child(`/items/${Date.now()}`).putFile(fileobj.uri)
+//         uploadTask.on('state_changed',
+//         (snapshot) => {
+
+//             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+//              if(progress==100){alert("uploaded")}
+//         },
+//         (error) => {
+//            alert("something went wrong")
+//         },
+//         () => {
+//             // Handle successful uploads on complete
+//             // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+//             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+
+//                 setImage(downloadURL)
+//             });
+//         }
+//         );
+//        })
+//    }
+
+//    --------------------------------------------
+if (!isAdmin)
+  return (
+    <View style={styles.container}>
+      <View style={styles.flatListHeaderStyle}>
+        {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => auth.signOut()}
+        >
+          <Text style={styles.buttonText}>Logout</Text>
+        </TouchableOpacity>
+        <Text
+          style={{
+            color: "#DDE2E5",
+            fontSize: 15,
+            marginTop: 10,
+            alignSelf: "center",
+          }}
+        >
+          Post Your Entries Here..
         </Text>
       </View>
-    );
-  else
-    return (
-      <ScrollView
-        style={styles.container}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-      >
-        <View style={styles.flatListHeaderStyle}>
-          {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
-          <Text style={{ color: "#DDE2E5", fontSize: 18, alignSelf: "center" }}>
-            Post Your Entries Here..
-          </Text>
-        </View>
+      <Text style={{ textAlign: "center" }}>
+        Sorry Only Hostel Owner's Can Post Entries
+      </Text>
+    </View>
+  );
+else
+  return (
+    <ScrollView
+      style={styles.container}
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+    >
 
-        <TextInput
-          style={styles.inputBox}
-          label="Name"
-          value={name}
-          numberOfLines={1}
-          multiline={true}
-          onChangeText={(text) => setName(text)}
-        />
+      {loading ?
+        (<View style={styles.loader}><ActivityIndicator size="large" color="skyblue"/>
+        <Text>Uploading Images ...</Text></View>)
+        : (
+          <View>
 
-        <TextInput
-          style={styles.inputBox}
-          label="Landmark/Locality"
-          value={LandMrk}
-          onChangeText={(text) => setLandMrk(text)}
-        />
+            <View style={styles.flatListHeaderStyle}>
+              {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
+              <Text style={{ color: "#DDE2E5", fontSize: 18, alignSelf: "center" }}>
+                Post Your Entries Here..
+              </Text>
+            </View>
 
-        <TextInput
-          style={styles.inputBox}
-          label="Full address"
-          value={address}
-          numberOfLines={3}
-          multiline={true}
-          onChangeText={(text) => setAddress(text)}
-        />
-        <TextInput
-          style={styles.inputBox}
-          label="Describe room/place"
-          value={desc}
-          numberOfLines={5}
-          multiline={true}
-          onChangeText={(text) => setDesc(text)}
-        />
-        <View>
-          <Dropdown
-            style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={data}
-            labelField="label"
-            valueField="value"
-            placeholder={!isFocus ? "Available for" : "..."}
-            value={isAvailableFor}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            onChange={(item) => {
-              setIsAvailableFor(item);
-              setIsFocus(false);
-            }}
-          />
-        </View>
+            <TextInput
+              style={styles.inputBox}
+              label="Name"
+              value={name}
+              numberOfLines={1}
+              multiline={true}
+              onChangeText={(text) => setName(text)}
+            />
 
-        <TextInput
-          style={styles.inputBox}
-          label="size of Room"
-          value={size}
-          // keyboardType="numeric"
-          onChangeText={(text) => setSize(text)}
-        />
-        <TextInput
-          style={styles.inputBox}
-          label="maximum capacity of room"
-          value={maxCap}
-          keyboardType="numeric"
-          onChangeText={(text) => setMaxcap(text)}
-        />
-        <TextInput
-          style={styles.inputBox}
-          label="price in INR"
-          value={price}
-          // keyboardType="numeric"
-          onChangeText={(text) => setPrice(text)}
-          underlineColorAndroid="#FFF"
-          autoCorrect={false}
-        />
+            <TextInput
+              style={styles.inputBox}
+              label="Landmark/Locality"
+              value={LandMrk}
+              onChangeText={(text) => setLandMrk(text)}
+            />
 
-        <TextInput
-          style={styles.inputBox}
-          label="Your contact Number"
-          value={phone}
-          keyboardType="numeric"
-          onChangeText={(text) => setPhone(text)}
-        />
+            <TextInput
+              style={styles.inputBox}
+              label="Full address"
+              value={address}
+              numberOfLines={3}
+              multiline={true}
+              onChangeText={(text) => setAddress(text)}
+            />
+            <TextInput
+              style={styles.inputBox}
+              label="Describe room/place"
+              value={desc}
+              numberOfLines={5}
+              multiline={true}
+              onChangeText={(text) => setDesc(text)}
+            />
+            <View>
+              <Dropdown
+                style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                inputSearchStyle={styles.inputSearchStyle}
+                iconStyle={styles.iconStyle}
+                data={data}
+                labelField="label"
+                valueField="value"
+                placeholder={!isFocus ? "Available for" : "..."}
+                value={isAvailableFor}
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                onChange={(item) => {
+                  console.log(item);
+                  setIsAvailableFor(item.value);
+                  setIsFocus(false);
+                }}
+              />
+            </View>
 
-        <Button
-          style={styles.button}
-          onPress={() => {
-            navigation.navigate("map");
-          }}
-          title="Map"
-          mode="contained"
-        >
-          Set Location
-        </Button>
+            <TextInput
+              style={styles.inputBox}
+              label="size of Room"
+              value={size}
+              // keyboardType="numeric"
+              onChangeText={(text) => setSize(text)}
+            />
+            <TextInput
+              style={styles.inputBox}
+              label="Maximum Capacity of room"
+              value={maxCap}
+              keyboardType="numeric"
+              onChangeText={(text) => setMaxcap(text)}
+            />
+            <TextInput
+              style={styles.inputBox}
+              label="Price in INR"
+              value={price}
+              // keyboardType="numeric"
+              onChangeText={(text) => setPrice(text)}
+              underlineColorAndroid="#FFF"
+              autoCorrect={false}
+            />
 
-        <Button
-          style={styles.button}
-          icon="camera"
-          mode="contained"
-          onPress={() => pickImage()}
-        >
-          pick Image
-        </Button>
+            <TextInput
+              style={styles.inputBox}
+              label="Your Contact Number"
+              value={phone}
+              keyboardType="numeric"
+              onChangeText={(text) => setPhone(text)}
+            />
 
-        <Button
-          style={styles.button}
-          icon="camera"
-          mode="contained"
-          onPress={() => uploadImage()}
-        >
-          upload Image
-        </Button>
+            <Button
+              style={styles.button}
+              onPress={() => {
+                navigation.navigate("map");
+              }}
+              title="Map"
+              mode="contained"
+            >
+              Set Location
+            </Button>
 
-        <Button
-          style={styles.button}
-          mode="contained"
-          onPress={() => postData()}
-        >
-          Post
-        </Button>
-      </ScrollView>
-    );
+            <Button
+              style={styles.button}
+              icon="camera"
+              mode="contained"
+              onPress={() => commonFun()}
+            >
+              pick Images
+            </Button>
+            <Button
+              style={styles.button}
+              icon="camera"
+              mode="contained"
+              onPress={() => uplaod1New()}
+            >
+              upload Images
+            </Button>
+
+            <Button
+              style={styles.button}
+              mode="contained"
+              onPress={() => postData()}
+            >
+              Post
+            </Button>
+          </View>
+        )
+      }
+    </ScrollView>
+  );
 };
 
 const styles = StyleSheet.create({
+  loader:{
+    // position: 'absolute',
+    marginTop:"50%",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   inputBox: {
     marginHorizontal: 15,
     marginVertical: 5,
@@ -444,3 +491,4 @@ const styles = StyleSheet.create({
 });
 
 export default CreateAd;
+
