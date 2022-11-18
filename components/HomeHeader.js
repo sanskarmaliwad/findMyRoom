@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { StyleSheet, View, Text, Image, TextInput } from "react-native";
 import { Slider } from "@miblanchard/react-native-slider";
 import { COLORS, FONTS, SIZES } from "../constants";
+
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { Button } from "react-native-paper";
 import { Dropdown } from "react-native-element-dropdown";
 import { block } from "react-native-reanimated";
 import { Context } from "../Context";
-
 
 const HomeHeader = ({ onSearch, onSelectRange }) => {
   const [range, setRange] = React.useState(10000);
@@ -67,12 +67,12 @@ const HomeHeader = ({ onSearch, onSelectRange }) => {
           style={{
             fontFamily: FONTS.bold,
             fontSize: SIZES.large,
-            color: COLORS.white,
+            color: "#DDE2E5",
             marginTop: SIZES.base / 2,
             textAlign: "center",
           }}
         >
-          Find Your Perfect Room
+         Find Your Perfect Room
         </Text>
       </View>
 
@@ -132,7 +132,6 @@ const HomeHeader = ({ onSearch, onSelectRange }) => {
               setIsFocus(false);
             }}
           />
-        
       </View>
     </View>
   );
@@ -145,7 +144,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     alignItems: "stretch",
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   dropdown: {
     height: 40,

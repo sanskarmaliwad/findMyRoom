@@ -1,3 +1,4 @@
+
 import {
   View,
   Text,
@@ -15,7 +16,7 @@ import { auth} from "../firebase";
 import validator from "email-validator";
 import { enableNetworkProviderAsync } from "expo-location";
 
-var provider = new firebase.auth.GoogleAuthProvider();
+
 
 const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -23,17 +24,10 @@ const SignupScreen = ({ navigation }) => {
   const [confirmPassword, setconfirmPassword] = useState("");
 
   // const signInWithGoogle = async () => {
-  //   firebase.auth().signInWithPopup(provider)
-  // .then((result) => {
-  //   var credential = result.credential;
-  //   var token = credential.accessToken;
-  //   var user = result.user;
-  // }).catch((error) => {
-  //   var errorCode = error.code;
-  //   var errorMessage = error.message;
-  //   var email = error.email;
-  //   var credential = error.credential;
-  // });
+  //   var provider = new firebase.auth.GoogleAuthProvider();
+  //   provider.addScope('profile');
+  //   provider.addScope('https://www.googleapis.com/auth/drive');
+  //   firebase.auth().signInWithRedirect(provider);
   // }
 
   const userSignup = async () => {
@@ -86,7 +80,7 @@ const SignupScreen = ({ navigation }) => {
   return (
     <KeyboardAvoidingView
       style={{
-        height: Dimensions.get("window").height,
+        height: "100%",
         backgroundColor: "#DDE2E5",
       }}
       behavior="position"

@@ -9,6 +9,7 @@ import {
   Platform,
   TouchableOpacity,
   TouchableHighlight,
+  ScrollView,
 } from "react-native";
 import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
 import { store } from "../firebase";
@@ -18,9 +19,13 @@ import { useAnimatedScrollHandler } from "react-native-reanimated";
 import codegenNativeCommands from "react-native/Libraries/Utilities/codegenNativeCommands";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Context } from "../Context";
+import * as Location from "expo-location";
+import * as geolib from 'geolib';
 
 const ItemsList = ({ navigation }) => {
-  const { sortingOption, setSortingOption} = React.useContext(Context)
+
+  const { sortingOption, setSortingOption } = React.useContext(Context)
+
 
   const myitems = [
     {
@@ -61,15 +66,21 @@ const ItemsList = ({ navigation }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newData, setNewData] = useState(items);
+  const [coordinates, setCoordinates] = useState({
+    latitude: 0,
+    longitude: 0
+  });
+
   const range = 4000;
 
   const getDetails = async () => {
     const querySnap = await store.collection("ads").get();
     const result = querySnap.docs.map((docSnap) => docSnap.data());
-    console.log(result);
+    //console.log(result);
     setItems(result);
     setNewData(result);
   };
+
 
   const openDial = (phone) => {
     if (Platform.OS === "android") {
@@ -79,7 +90,47 @@ const ItemsList = ({ navigation }) => {
     }
   };
 
+  async function getLocation() {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission not granted",
+        "Allow the app to use location service.",
+        [{ text: "OK" }],
+        { cancelable: false }
+      );
+    }
+
+    let { coords } = await Location.getCurrentPositionAsync();
+
+    if (coords) {
+      const { latitude, longitude } = coords;
+      let response = await Location.reverseGeocodeAsync({
+        latitude,
+        longitude,
+      });
+      
+      setCoordinates({
+        latitude: latitude,
+        longitude: longitude
+      });
+     // console.log(latitude + " " + longitude);
+      //console.log(items);
+      //console.log(coords);
+
+      // for (let item of response) {
+      //   let address = `${item.name}, ${item.street}, ${item.postalCode}, ${item.city}`;
+
+      //   console.log(address);
+      // }
+    }
+
+  }
+
   useEffect(() => {
+
+    getLocation();
     getDetails();
     return () => {
       console.log("cleanup");
@@ -90,7 +141,7 @@ const ItemsList = ({ navigation }) => {
     const filteredData = items.filter((item) => {
       // item.LandMrk.toLowerCase().includes(value.toLowerCase())
       if (
-        parseInt(item.price)<=range
+        parseInt(item.price) <= range
       ) {
         return true;
       }
@@ -134,9 +185,10 @@ const ItemsList = ({ navigation }) => {
 
         <Card.Content>
           <Paragraph style={{ textAlign: "left" }}>Rs {item.price}/-</Paragraph>
+          <Paragraph>Hostel is just {geolib.getDistance(item.pin,coordinates)/1000} km. away from you</Paragraph>
           {/* <Paragraph>{item.desc}</Paragraph> */}
         </Card.Content>
-        <TouchableHighlight style={{borderRadius:10}}
+        <TouchableHighlight style={{ borderRadius: 10 }}
           onPress={() => {
             navigation.navigate("description", {
               desc: item.desc,
@@ -147,20 +199,23 @@ const ItemsList = ({ navigation }) => {
               tempImage: item.tempImage,
               address: item.address,
               phone: item.phone,
+              pin: item.pin,
+              urls: item.urls,
             });
           }}
-        >
+        > 
           <Card.Cover
             style={{ borderRadius: 10, overflow: "hidden" }}
-            source={{ uri: item.tempImage }}
+            source={{ uri: "https://i.pinimg.com/236x/09/48/e2/0948e2debd1e27f939fcd90590441845.jpg" }}
           />
+
         </TouchableHighlight>
         <Card.Actions>
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
               navigation.navigate("description", {
-                name:item.name,
+                name: item.name,
                 desc: item.desc,
                 landMrk: item.LandMrk,
                 size: item.size,
@@ -170,6 +225,8 @@ const ItemsList = ({ navigation }) => {
                 tempImage: item.tempImage,
                 address: item.address,
                 phone: item.phone,
+                pin: item.pin,
+                urls: item.urls,
               });
             }}
             title="Description"
@@ -201,17 +258,17 @@ const ItemsList = ({ navigation }) => {
   };
 
   const sortingMethod = (sortingOption) => {
-    console.log(sortingOption);
-    return ( sortingOption.value ? newData.sort((a,b) => a.price.localeCompare(b.price)) : (newData.sort((a,b) => a.price.localeCompare(b.price)).reverse()));
+    return (sortingOption.value ? newData.sort((a, b) => a.price.localeCompare(b.price)) : (newData.sort((a, b) => a.price.localeCompare(b.price)).reverse()));
   }
 
   return (
     <View style={{ backgroundColor: "#DDE2E5" }}>
+      {/* <Buttom title="Show my location" /> */}
       <StatusBar backgroundColor="#DDE2E5" barStyle={"dark-content"} />
       <FlatList
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        
+
         data={sortingMethod(sortingOption)}
         // data={newData.sort((a,b) => a.price.localeCompare(b.price))}
         keyExtractor={(item) => item.phone}

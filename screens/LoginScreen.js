@@ -45,7 +45,7 @@ const LoginScreen = ({ navigation }) => {
   return (
     <KeyboardAvoidingView
       style={{
-        height: Dimensions.get("window").height,
+        height: "100%",
         backgroundColor: "#DDE2E5",
       }}
       behavior="position"
