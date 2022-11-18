@@ -42,7 +42,7 @@ const CreateAd = ({ navigation }) => {
     { label: "Common", value: "Common" },
   ];
 
-  const [isAvailableFor, setIsAvailableFor] = useState(null);
+  const [isAvailableFor, setIsAvailableFor] = useState("");
   const [isFocus, setIsFocus] = useState(false);
   const [name, setName] = useState("");
   const [LandMrk, setLandMrk] = useState("");
@@ -65,6 +65,7 @@ const CreateAd = ({ navigation }) => {
       await store.collection("ads").add({
         LandMrk,
         desc,
+        isAvailableFor,
         size,
         price,
         phone,
@@ -89,7 +90,7 @@ const CreateAd = ({ navigation }) => {
       setImage("");
       setImages([]);
       setUrls([]);
-      setIsAvailableFor(null);
+      setIsAvailableFor("");
 
     } catch (err) {
       console.log(err);
@@ -322,6 +323,7 @@ else
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
                 onChange={(item) => {
+                  console.log(item);
                   setIsAvailableFor(item);
                   setIsFocus(false);
                 }}
