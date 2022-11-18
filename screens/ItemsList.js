@@ -190,6 +190,7 @@ const ItemsList = ({ navigation }) => {
             navigation.navigate("description", {
               name: item.name,
               desc: item.desc,
+              isAvailableFor: item.isAvailableFor,
               landMrk: item.LandMrk,
               size: item.size,
               price: item.price,
