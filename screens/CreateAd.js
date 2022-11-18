@@ -44,7 +44,6 @@ const CreateAd = ({ navigation }) => {
 
   const [isAvailableFor, setIsAvailableFor] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
-
   const [name, setName] = useState("");
   const [LandMrk, setLandMrk] = useState("");
   const [desc, setDesc] = useState("");
@@ -63,31 +62,20 @@ const CreateAd = ({ navigation }) => {
 
   const postData = async () => {
     try {
-      if (!name || !LandMrk || !desc || !size || !price || !phone || !maxCap || !address) {
-        Alert.alert("Please Fill all the Details");
-        return;
-      } else if (phone.length != 10) {
-        Alert.alert("Phone Number is not valid");
-        return;
-      }
-      else {
-        await store.collection("ads").add({
-          name,
-          LandMrk,
-          desc,
-          size,
-          price,
-          phone,
-          maxCap,
-          urls,
-          address,
-          pin,
-          isAvailableFor,
-          uid: auth.currentUser.uid,
-        });
-      }
+      await store.collection("ads").add({
+        LandMrk,
+        desc,
+        size,
+        price,
+        phone,
+        maxCap,
+        urls,
+        address,
+        pin,
+        uid: auth.currentUser.uid,
+      });
 
-      Alert.alert("Successfully Posted Your Ad!");
+      Alert.alert("posted your Ad!");
 
 
       setName("");
@@ -96,6 +84,7 @@ const CreateAd = ({ navigation }) => {
       setSize("");
       setPrice("");
       setPhone("");
+      setMaxcap("");
       setAddress("");
       setImage("");
       setImages([]);
@@ -104,7 +93,7 @@ const CreateAd = ({ navigation }) => {
 
     } catch (err) {
       console.log(err);
-      Alert.alert("Something Went Wrong, Try Again");
+      Alert.alert("something went wrong.try again");
     }
   };
 
@@ -164,107 +153,110 @@ const CreateAd = ({ navigation }) => {
         var message = "uploaded image" + cnt;
         if (progress == 100) { console.log(message); cnt++; }
         if (cnt === images.length + 1) {
-          console.log("All Done."); alert("All Done!"); setLoading(false);}
+          console.log("all done."); alert("all done!"); setLoading(false);}
       }
       );
     }
     );
   }
 
-  // -------------------------
-  // const selectPhoto = async ()=>{
-  //     let result = await ImagePicker.launchImageLibraryAsync({
-  //         mediaTypes: ImagePicker.MediaTypeOptions.All,
-  //         allowsEditing: true,
-  //         aspect: [4, 3],
-  //         quality: 1,
-  //       });
+// console.log("images: ", images);
+// console.log("urls", urls);
 
-  //       console.log(result.uri);
+// -------------------------
+// const selectPhoto = async ()=>{
+//     let result = await ImagePicker.launchImageLibraryAsync({
+//         mediaTypes: ImagePicker.MediaTypeOptions.All,
+//         allowsEditing: true,
+//         aspect: [4, 3],
+//         quality: 1,
+//       });
 
-  //       if (!result.cancelled) {
-  //         setImage(result.uri);
-  //         console.log(result.uri)
+//       console.log(result.uri);
 
-  //       }
+//       if (!result.cancelled) {
+//         setImage(result.uri);
+//         console.log(result.uri)
 
-  //       const uploadTask = storageRef.child(`${Date.now()}`).putFile(result.uri)
+//       }
 
-  //       uploadTask.on('state_changed',
-  //         (snapshot) => {
+//       const uploadTask = storageRef.child(`${Date.now()}`).putFile(result.uri)
 
-  //             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-  //              if(progress==100){alert("uploaded")}
-  //         },
-  //         (error) => {
-  //            alert("something went wrong")
-  //         },
-  //         () => {
-  //             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+//       uploadTask.on('state_changed',
+//         (snapshot) => {
 
-  //                 setImage(downloadURL)
-  //             });
-  //         }
-  //         );
-  //    }
+//             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+//              if(progress==100){alert("uploaded")}
+//         },
+//         (error) => {
+//            alert("something went wrong")
+//         },
+//         () => {
+//             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
 
-  //    --------------------------------------------
+//                 setImage(downloadURL)
+//             });
+//         }
+//         );
+//    }
 
-  // const openCamera = ()=>{
-  //     launchImageLibrary({quality:0.5},(fileobj)=>{
-  //         const uploadTask =  storage().ref().child(`/items/${Date.now()}`).putFile(fileobj.uri)
-  //         uploadTask.on('state_changed',
-  //         (snapshot) => {
+//    --------------------------------------------
 
-  //             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-  //              if(progress==100){alert("uploaded")}
-  //         },
-  //         (error) => {
-  //            alert("something went wrong")
-  //         },
-  //         () => {
-  //             // Handle successful uploads on complete
-  //             // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-  //             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+// const openCamera = ()=>{
+//     launchImageLibrary({quality:0.5},(fileobj)=>{
+//         const uploadTask =  storage().ref().child(`/items/${Date.now()}`).putFile(fileobj.uri)
+//         uploadTask.on('state_changed',
+//         (snapshot) => {
 
-  //                 setImage(downloadURL)
-  //             });
-  //         }
-  //         );
-  //        })
-  //    }
+//             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+//              if(progress==100){alert("uploaded")}
+//         },
+//         (error) => {
+//            alert("something went wrong")
+//         },
+//         () => {
+//             // Handle successful uploads on complete
+//             // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+//             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
 
-  //    --------------------------------------------
-  if (!isAdmin)
-    return (
-      <View style={styles.container}>
-        <View style={styles.flatListHeaderStyle}>
-          {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => auth.signOut()}
-          >
-            <Text style={styles.buttonText}>Logout</Text>
-          </TouchableOpacity>
-          <Text
-            style={{
-              color: "#DDE2E5",
-              fontSize: 15,
-              marginTop: 10,
-              alignSelf: "center",
-            }}
-          >
-            Post Your Entries Here..
-          </Text>
-        </View>
-        <Text style={{ textAlign: "center" }}>
-          Sorry Only Hostel Owner's Can Post Entries
+//                 setImage(downloadURL)
+//             });
+//         }
+//         );
+//        })
+//    }
+
+//    --------------------------------------------
+if (!isAdmin)
+  return (
+    <View style={styles.container}>
+      <View style={styles.flatListHeaderStyle}>
+        {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => auth.signOut()}
+        >
+          <Text style={styles.buttonText}>Logout</Text>
+        </TouchableOpacity>
+        <Text
+          style={{
+            color: "#DDE2E5",
+            fontSize: 15,
+            marginTop: 10,
+            alignSelf: "center",
+          }}
+        >
+          Post Your Entries Here..
         </Text>
       </View>
-    );
-  else
-    return (
-      <ScrollView
+      <Text style={{ textAlign: "center" }}>
+        Sorry Only Hostel Owner's Can Post Entries
+      </Text>
+    </View>
+  );
+else
+  return (
+    <ScrollView
       style={styles.container}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
@@ -272,7 +264,7 @@ const CreateAd = ({ navigation }) => {
 
       {loading ?
         (<View style={styles.loader}><ActivityIndicator size="large" color="skyblue"/>
-        <Text style={{textAlign:'center', marginTop:'30'}}>Uploading Images ...</Text></View>)
+        <Text>Uploading Images ...</Text></View>)
         : (
           <View>
 
@@ -301,7 +293,7 @@ const CreateAd = ({ navigation }) => {
 
             <TextInput
               style={styles.inputBox}
-              label="Full Address"
+              label="Full address"
               value={address}
               numberOfLines={3}
               multiline={true}
@@ -309,7 +301,7 @@ const CreateAd = ({ navigation }) => {
             />
             <TextInput
               style={styles.inputBox}
-              label="Describe Room/Place or Ameneties"
+              label="Describe room/place"
               value={desc}
               numberOfLines={5}
               multiline={true}
@@ -338,15 +330,21 @@ const CreateAd = ({ navigation }) => {
 
             <TextInput
               style={styles.inputBox}
-              label="Size Of Room (Beds)"
+              label="size of Room"
               value={size}
               // keyboardType="numeric"
               onChangeText={(text) => setSize(text)}
             />
-
             <TextInput
               style={styles.inputBox}
-              label="Price In INR"
+              label="Maximum Capacity of room"
+              value={maxCap}
+              keyboardType="numeric"
+              onChangeText={(text) => setMaxcap(text)}
+            />
+            <TextInput
+              style={styles.inputBox}
+              label="Price in INR"
               value={price}
               // keyboardType="numeric"
               onChangeText={(text) => setPrice(text)}
@@ -401,10 +399,20 @@ const CreateAd = ({ navigation }) => {
         )
       }
     </ScrollView>
-    );
+  );
 };
 
 const styles = StyleSheet.create({
+  loader:{
+    // position: 'absolute',
+    marginTop:"50%",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   inputBox: {
     marginHorizontal: 15,
     marginVertical: 5,
@@ -469,3 +477,4 @@ const styles = StyleSheet.create({
 });
 
 export default CreateAd;
+
