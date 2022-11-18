@@ -83,7 +83,7 @@ const HomeHeader = ({ onSearch, onSelectRange }) => {
           style={{
             width: "100%",
             borderRadius: SIZES.font,
-            backgroundColor: COLORS.gray,
+            backgroundColor: "#EFF5F5",
             flexDirection: "row",
             alignItems: "center",
             paddingHorizontal: SIZES.font,
@@ -97,7 +97,7 @@ const HomeHeader = ({ onSearch, onSelectRange }) => {
           /> */}
           <TextInput
             placeholder="Search by Price or Landmark or Capacity..."
-            style={{ flex: 1 }}
+            style={{ flex: 1}}
             onChangeText={onSearch}
           />
           </View>
@@ -153,13 +153,13 @@ const styles = StyleSheet.create({
     alignSelf:'center',
     borderRadius:20,
     textAlign:'center',
-    borderColor: "#B2B2B2",
+    borderColor: "#EFF5F5",
     borderBottomWidth: 0.5,
     paddingHorizontal: 8,
     marginHorizontal: 15,
     marginVertical: 5,
     elevation: 1,
-    backgroundColor: "#B2B2B2",
+    backgroundColor: "#EFF5F5",
   },
   icon: {
     marginRight: 5,

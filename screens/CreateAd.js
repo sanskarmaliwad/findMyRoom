@@ -11,27 +11,17 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import { TextInput, Button } from "react-native-paper";
-import { launchCamera, launchImageLibrary } from "react-native-image-picker";
-import { Camera, CameraType } from "expo-camera";
 // import * as ImagePicker from "expo-image-picker"
 import * as ImagePicker from "expo-image-picker";
 import { store, auth, storage, firebaseConfig } from "../firebase";
-import MapView, { Marker } from "react-native-maps";
-import MapInput, { MapInputVariant } from "react-native-map-input";
-import * as Location from "expo-location";
-import Map from "./Map";
 import { Context } from "../Context";
 import { COLORS, FONTS, SIZES } from "../constants";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dropdown } from "react-native-element-dropdown";
-import { color } from "react-native-reanimated";
 
 const storageRef = storage.ref();
 
 const CreateAd = ({ navigation }) => {
-  const { pin, setPin,
-    isAdmin, setisAdmin } = React.useContext(Context);
-  const [uploading, setUploading] = useState(false);
+  const { pin, isAdmin} = React.useContext(Context);
   // useEffect((e)=>{
   //     e.preventDefault();
   //   },[])
@@ -52,7 +42,6 @@ const CreateAd = ({ navigation }) => {
   const [phone, setPhone] = useState("");
   const [maxCap, setMaxcap] = useState("");
   const [address, setAddress] = useState("");
-  const [image, setImage] = useState("");
 
   const [images, setImages] = useState([]);
   const [urls, setUrls] = useState([]);
@@ -63,6 +52,7 @@ const CreateAd = ({ navigation }) => {
   const postData = async () => {
     try {
       await store.collection("ads").add({
+        name,
         LandMrk,
         desc,
         size,
@@ -86,7 +76,6 @@ const CreateAd = ({ navigation }) => {
       setPhone("");
       setMaxcap("");
       setAddress("");
-      setImage("");
       setImages([]);
       setUrls([]);
       setIsAvailableFor(null);

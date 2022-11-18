@@ -12,6 +12,7 @@ import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
 import { auth } from "../firebase";
 import { store } from "../firebase";
 import { COLORS, FONTS, SIZES } from "../constants";
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const AccountScreen = () => {
   const [items, setItems] = useState([]);
@@ -48,7 +49,7 @@ const AccountScreen = () => {
         </Card.Content>
         <Card.Cover
           style={{ borderRadius: 10, overflow: "hidden" }}
-          source={{ uri: item.tempImage }}
+          source={{ uri: item.urls[0] }}
         />
         <Card.Actions>
           {/* <Button onPress={()=>(openDial(item.phone))}>call seller</Button> */}

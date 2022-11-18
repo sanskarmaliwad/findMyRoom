@@ -20,12 +20,13 @@ import codegenNativeCommands from "react-native/Libraries/Utilities/codegenNativ
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Context } from "../Context";
 import * as Location from "expo-location";
-import * as geolib from 'geolib';
+import * as geolib from "geolib";
+import SkeletonPlaceholder from "react-native-skeleton-placeholder";
+import { LinearGradient } from "expo-linear-gradient";
 
 const ItemsList = ({ navigation }) => {
-
-  const { sortingOption, setSortingOption, coordinates, setCoordinates } = React.useContext(Context);
-
+  const { sortingOption, setSortingOption, coordinates, setCoordinates } =
+    React.useContext(Context);
 
   const myitems = [
     {
@@ -66,7 +67,6 @@ const ItemsList = ({ navigation }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newData, setNewData] = useState(items);
-  
 
   const range = 4000;
 
@@ -77,7 +77,6 @@ const ItemsList = ({ navigation }) => {
     setItems(result);
     setNewData(result);
   };
-
 
   const openDial = (phone) => {
     if (Platform.OS === "android") {
@@ -107,12 +106,12 @@ const ItemsList = ({ navigation }) => {
         latitude,
         longitude,
       });
-      
+
       setCoordinates({
         latitude: latitude,
-        longitude: longitude
+        longitude: longitude,
       });
-     // console.log(latitude + " " + longitude);
+      // console.log(latitude + " " + longitude);
       //console.log(items);
       //console.log(coords);
 
@@ -122,11 +121,9 @@ const ItemsList = ({ navigation }) => {
       //   console.log(address);
       // }
     }
-
   }
 
   useEffect(() => {
-
     getLocation();
     getDetails();
     return () => {
@@ -137,16 +134,14 @@ const ItemsList = ({ navigation }) => {
   const handleRange = (range) => {
     const filteredData = items.filter((item) => {
       // item.LandMrk.toLowerCase().includes(value.toLowerCase())
-      if (
-        parseInt(item.price) <= range
-      ) {
+      if (parseInt(item.price) <= range) {
         return true;
       }
       return false;
     });
 
-    setNewData(filteredData)
-  }
+    setNewData(filteredData);
+  };
 
   const handleSearch = (value) => {
     if (value.length === 0) {
@@ -182,10 +177,14 @@ const ItemsList = ({ navigation }) => {
 
         <Card.Content>
           <Paragraph style={{ textAlign: "left" }}>Rs {item.price}/-</Paragraph>
-          <Paragraph>Hostel is just {geolib.getDistance(item.pin,coordinates)/1000} km. away from you</Paragraph>
+          <Paragraph>
+            Hostel is just {geolib.getDistance(item.pin, coordinates) / 1000}{" "}
+            km. away from you
+          </Paragraph>
           {/* <Paragraph>{item.desc}</Paragraph> */}
         </Card.Content>
-        <TouchableHighlight style={{ borderRadius: 10 }}
+        <TouchableHighlight
+          style={{ borderRadius: 10 }}
           onPress={() => {
             navigation.navigate("description", {
               name: item.name,
@@ -200,12 +199,11 @@ const ItemsList = ({ navigation }) => {
               urls: item.urls,
             });
           }}
-        > 
+        >
           <Card.Cover
             style={{ borderRadius: 10, overflow: "hidden" }}
-            source={{ uri: item.urls[0]}}
+            source={{ uri: item.urls[0] }}
           />
-
         </TouchableHighlight>
         <Card.Actions>
           <TouchableOpacity
@@ -260,25 +258,31 @@ const ItemsList = ({ navigation }) => {
   const sortingMethod = (sortingOption) => {
     sortingOption = sortingOption.value;
 
-    if (sortingOption==0) {
-      return (newData.sort((a, b) => a.price.localeCompare(b.price)));
-    } else if (sortingOption==1) {
-      return (newData.sort((a, b) => a.price.localeCompare(b.price)).reverse());
-    } else if(sortingOption==2){
-      return newData.sort((a, b) => (geolib.getDistance(a.pin,coordinates)/1000) > (geolib.getDistance(b.pin,coordinates)/1000));
-    } else if(sortingOption==3){
-      return newData.sort((a, b) => (geolib.getDistance(a.pin,coordinates)/1000) < (geolib.getDistance(b.pin,coordinates)/1000));
+    if (sortingOption == 0) {
+      return newData.sort((a, b) => a.price.localeCompare(b.price));
+    } else if (sortingOption == 1) {
+      return newData.sort((a, b) => a.price.localeCompare(b.price)).reverse();
+    } else if (sortingOption == 2) {
+      return newData.sort(
+        (a, b) =>
+          geolib.getDistance(a.pin, coordinates) / 1000 >
+          geolib.getDistance(b.pin, coordinates) / 1000
+      );
+    } else if (sortingOption == 3) {
+      return newData.sort(
+        (a, b) =>
+          geolib.getDistance(a.pin, coordinates) / 1000 <
+          geolib.getDistance(b.pin, coordinates) / 1000
+      );
     } else return newData;
-  }
+  };
 
   return (
     <View style={{ backgroundColor: "#DDE2E5" }}>
-      {/* <Buttom title="Show my location" /> */}
       <StatusBar backgroundColor="#DDE2E5" barStyle={"dark-content"} />
       <FlatList
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-
         data={sortingMethod(sortingOption)}
         // data={newData.sort((a,b) => a.price.localeCompare(b.price))}
         keyExtractor={(item) => item.phone}
@@ -289,7 +293,9 @@ const ItemsList = ({ navigation }) => {
           setLoading(false);
         }}
         refreshing={loading}
-        ListHeaderComponent={<HomeHeader onSearch={handleSearch} onSelectRange={handleRange} />}
+        ListHeaderComponent={
+          <HomeHeader onSearch={handleSearch} onSelectRange={handleRange} />
+        }
       />
     </View>
   );
