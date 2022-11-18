@@ -24,11 +24,11 @@ const LoginScreen = ({ navigation }) => {
 
   const userLogin = async () => {
     if (!email || !password) {
-      Alert.alert("please enter all the fields");
+      Alert.alert("Please Enter All The Fields");
       return;
     }
     if (validator.validate(email) == false) {
-      Alert.alert("please enter valid email address");
+      Alert.alert("Please Enter Valid Email Address");
       return;
     }
 
@@ -37,7 +37,7 @@ const LoginScreen = ({ navigation }) => {
       console.log("Logged In");
       console.log(result.user.email);
     } catch (err) {
-      Alert.alert("Invalid credentials");
+      Alert.alert("Invalid Credentials, Try Again");
       console.log(err);
     }
   };

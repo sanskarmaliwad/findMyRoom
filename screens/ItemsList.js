@@ -188,12 +188,12 @@ const ItemsList = ({ navigation }) => {
         <TouchableHighlight style={{ borderRadius: 10 }}
           onPress={() => {
             navigation.navigate("description", {
+              name: item.name,
               desc: item.desc,
               landMrk: item.LandMrk,
               size: item.size,
               price: item.price,
               maxCap: item.maxCap,
-              tempImage: item.tempImage,
               address: item.address,
               phone: item.phone,
               pin: item.pin,
@@ -203,7 +203,7 @@ const ItemsList = ({ navigation }) => {
         > 
           <Card.Cover
             style={{ borderRadius: 10, overflow: "hidden" }}
-            source={{ uri: "https://i.pinimg.com/236x/09/48/e2/0948e2debd1e27f939fcd90590441845.jpg" }}
+            source={{ uri: item.urls[0]}}
           />
 
         </TouchableHighlight>
@@ -219,7 +219,6 @@ const ItemsList = ({ navigation }) => {
                 isAvailableFor: item.isAvailableFor,
                 price: item.price,
                 maxCap: item.maxCap,
-                tempImage: item.tempImage,
                 address: item.address,
                 phone: item.phone,
                 pin: item.pin,

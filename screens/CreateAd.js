@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
   Dimensions,
+  ActivityIndicator,
   KeyboardAvoidingView,
 } from "react-native";
 import { TextInput, Button } from "react-native-paper";
@@ -53,13 +54,17 @@ const CreateAd = ({ navigation }) => {
   const [maxCap, setMaxcap] = useState("");
   const [address, setAddress] = useState("");
   const [image, setImage] = useState("");
-  const [tempImage, setTempImage] = useState("");
+
+  const [images, setImages] = useState([]);
+  const [urls, setUrls] = useState([]);
+  const [progress, setProgress] = useState(0);
+  const [loading, setLoading] = useState(false);
 
 
   const postData = async () => {
     try {
-      if (!name || !LandMrk || !desc || !size || !price || !phone || !maxCap || !address || !image || !tempImage) {
-        Alert.alert("Please fill all the fields");
+      if (!name || !LandMrk || !desc || !size || !price || !phone || !maxCap || !address) {
+        Alert.alert("Please Fill all the Details");
         return;
       } else if (phone.length != 10) {
         Alert.alert("Phone Number is not valid");
@@ -67,21 +72,22 @@ const CreateAd = ({ navigation }) => {
       }
       else {
         await store.collection("ads").add({
+          name,
           LandMrk,
           desc,
           size,
           price,
           phone,
           maxCap,
-          address,
-          tempImage,
-          pin,
           urls,
+          address,
+          pin,
+          isAvailableFor,
           uid: auth.currentUser.uid,
         });
       }
 
-      Alert.alert("posted your Ad!");
+      Alert.alert("Successfully Posted Your Ad!");
 
 
       setName("");
@@ -90,64 +96,80 @@ const CreateAd = ({ navigation }) => {
       setSize("");
       setPrice("");
       setPhone("");
-      setMaxcap("");
       setAddress("");
       setImage("");
+      setImages([]);
+      setUrls([]);
       setIsAvailableFor(null);
 
     } catch (err) {
       console.log(err);
-      Alert.alert("something went wrong.try again");
+      Alert.alert("Something Went Wrong, Try Again");
     }
   };
 
   // start -------------------------
 
-  const pickImage = async () => {
+  const commonFun = async() => {
+    pickImage1();
+    // console.log("running");
+    // let status = await pickImage1();
+    // console.log(status);
+    // if(status){
+    //   console.log("running when status true");
+    //   uplaod1New();
+    // }
+  }
+
+  const pickImage1 = async () => {
+
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
+      allowsMultipleSelection: true,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      selectionLimit: 5,
       aspect: [4, 3],
       quality: 1,
     });
+    const target = result.selected;  // equal to target.files
 
-    const source = { uri: result.uri };
-    console.log(source);
-    setImage(source);
-    setTempImage(source.uri);
-    console.log(source);
-  };
+    // console.log(target);
 
-  const uploadImage = async () => {
-    setUploading(true);
-    const response = await fetch(image.uri);
-    const blob = await response.blob();
-    const filename = Date.now();
-    var ref = storageRef.child(`${filename}`).put(blob);
-    ref.then((snapshot) => {
-      ref.snapshot.ref.getDownloadURL().then((downloadURL) => {
-        setTempImage(downloadURL);
-      });
-      var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      if (progress == 100) {
-        alert("uploaded");
-        console.log("uploaded");
-      }
-    });
-
-    try {
-      await ref;
-    } catch (e) {
-      console.log(e);
+    for (let i = 0; i < target.length; i++) {
+      const newImage = target[i];
+      newImage["id"] = Math.random();
+      setImages((prevState) => [...prevState, newImage]);
     }
-    setUploading(false);
-    // Alert.alert('image uploaded..!!');
-    console.log(tempImage);
+    // if(result)return true;
+    // await uplaod1New();
   };
 
-  const echoo = () => {
-    console.log(tempImage);
-  };
+  const uplaod1New = async () => {
+    console.log(images);
+    let cnt = 1;
+    setLoading(true);
+    images.map(async (image) => {
+
+      const response = await fetch(image.uri)
+      const blob = await response.blob();
+      const filename = Date.now();
+      var ref = storageRef.child(`/images/${filename}`).put(blob);
+
+      ref.then((snapshot) => {
+        ref.snapshot.ref.getDownloadURL().then((downloadURL) => {
+          setUrls((prevState) => [...prevState, downloadURL]);
+        });
+
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setProgress(progress);
+        var message = "uploaded image" + cnt;
+        if (progress == 100) { console.log(message); cnt++; }
+        if (cnt === images.length + 1) {
+          console.log("All Done."); alert("All Done!"); setLoading(false);}
+      }
+      );
+    }
+    );
+  }
 
   // -------------------------
   // const selectPhoto = async ()=>{
@@ -243,139 +265,142 @@ const CreateAd = ({ navigation }) => {
   else
     return (
       <ScrollView
-        style={styles.container}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-      >
-        <View style={styles.flatListHeaderStyle}>
-          {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
-          <Text style={{ color: "#DDE2E5", fontSize: 18, alignSelf: "center" }}>
-            Post Your Entries Here..
-          </Text>
-        </View>
+      style={styles.container}
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+    >
 
-        <TextInput
-          style={styles.inputBox}
-          label="Name"
-          value={name}
-          numberOfLines={1}
-          multiline={true}
-          onChangeText={(text) => setName(text)}
-        />
+      {loading ?
+        (<View style={styles.loader}><ActivityIndicator size="large" color="skyblue"/>
+        <Text style={{textAlign:'center', marginTop:'30'}}>Uploading Images ...</Text></View>)
+        : (
+          <View>
 
-        <TextInput
-          style={styles.inputBox}
-          label="Landmark/Locality"
-          value={LandMrk}
-          onChangeText={(text) => setLandMrk(text)}
-        />
+            <View style={styles.flatListHeaderStyle}>
+              {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
+              <Text style={{ color: "#DDE2E5", fontSize: 18, alignSelf: "center" }}>
+                Post Your Entries Here..
+              </Text>
+            </View>
 
-        <TextInput
-          style={styles.inputBox}
-          label="Full address"
-          value={address}
-          numberOfLines={3}
-          multiline={true}
-          onChangeText={(text) => setAddress(text)}
-        />
-        <TextInput
-          style={styles.inputBox}
-          label="Describe room/place"
-          value={desc}
-          numberOfLines={5}
-          multiline={true}
-          onChangeText={(text) => setDesc(text)}
-        />
-        <View>
-          <Dropdown
-            style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={data}
-            labelField="label"
-            valueField="value"
-            placeholder={!isFocus ? "Available for" : "..."}
-            value={isAvailableFor}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            onChange={(item) => {
-              setIsAvailableFor(item);
-              setIsFocus(false);
-            }}
-          />
-        </View>
+            <TextInput
+              style={styles.inputBox}
+              label="Name"
+              value={name}
+              numberOfLines={1}
+              multiline={true}
+              onChangeText={(text) => setName(text)}
+            />
 
-        <TextInput
-          style={styles.inputBox}
-          label="size of Room"
-          value={size}
-          // keyboardType="numeric"
-          onChangeText={(text) => setSize(text)}
-        />
-        <TextInput
-          style={styles.inputBox}
-          label="maximum capacity of room"
-          value={maxCap}
-          keyboardType="numeric"
-          onChangeText={(text) => setMaxcap(text)}
-        />
-        <TextInput
-          style={styles.inputBox}
-          label="price in INR"
-          value={price}
-          // keyboardType="numeric"
-          onChangeText={(text) => setPrice(text)}
-          underlineColorAndroid="#FFF"
-          autoCorrect={false}
-        />
+            <TextInput
+              style={styles.inputBox}
+              label="Landmark/Locality"
+              value={LandMrk}
+              onChangeText={(text) => setLandMrk(text)}
+            />
 
-        <TextInput
-          style={styles.inputBox}
-          label="Your contact Number"
-          value={phone}
-          keyboardType="numeric"
-          onChangeText={(text) => setPhone(text)}
-        />
+            <TextInput
+              style={styles.inputBox}
+              label="Full Address"
+              value={address}
+              numberOfLines={3}
+              multiline={true}
+              onChangeText={(text) => setAddress(text)}
+            />
+            <TextInput
+              style={styles.inputBox}
+              label="Describe Room/Place or Ameneties"
+              value={desc}
+              numberOfLines={5}
+              multiline={true}
+              onChangeText={(text) => setDesc(text)}
+            />
+            <View>
+              <Dropdown
+                style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                inputSearchStyle={styles.inputSearchStyle}
+                iconStyle={styles.iconStyle}
+                data={data}
+                labelField="label"
+                valueField="value"
+                placeholder={!isFocus ? "Available for" : "..."}
+                value={isAvailableFor}
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                onChange={(item) => {
+                  setIsAvailableFor(item);
+                  setIsFocus(false);
+                }}
+              />
+            </View>
 
-        <Button
-          style={styles.button}
-          onPress={() => {
-            navigation.navigate("map");
-          }}
-          title="Map"
-          mode="contained"
-        >
-          Set Location
-        </Button>
+            <TextInput
+              style={styles.inputBox}
+              label="Size Of Room (Beds)"
+              value={size}
+              // keyboardType="numeric"
+              onChangeText={(text) => setSize(text)}
+            />
 
-        <Button
-          style={styles.button}
-          icon="camera"
-          mode="contained"
-          onPress={() => pickImage()}
-        >
-          pick Image
-        </Button>
+            <TextInput
+              style={styles.inputBox}
+              label="Price In INR"
+              value={price}
+              // keyboardType="numeric"
+              onChangeText={(text) => setPrice(text)}
+              underlineColorAndroid="#FFF"
+              autoCorrect={false}
+            />
 
-        <Button
-          style={styles.button}
-          icon="camera"
-          mode="contained"
-          onPress={() => uploadImage()}
-        >
-          upload Image
-        </Button>
+            <TextInput
+              style={styles.inputBox}
+              label="Your Contact Number"
+              value={phone}
+              keyboardType="numeric"
+              onChangeText={(text) => setPhone(text)}
+            />
 
-        <Button
-          style={styles.button}
-          mode="contained"
-          onPress={() => postData()}
-        >
-          Post
-        </Button>
-      </ScrollView>
+            <Button
+              style={styles.button}
+              onPress={() => {
+                navigation.navigate("map");
+              }}
+              title="Map"
+              mode="contained"
+            >
+              Set Location
+            </Button>
+
+            <Button
+              style={styles.button}
+              icon="camera"
+              mode="contained"
+              onPress={() => commonFun()}
+            >
+              pick Images
+            </Button>
+            <Button
+              style={styles.button}
+              icon="camera"
+              mode="contained"
+              onPress={() => uplaod1New()}
+            >
+              upload Images
+            </Button>
+
+            <Button
+              style={styles.button}
+              mode="contained"
+              onPress={() => postData()}
+            >
+              Post
+            </Button>
+          </View>
+        )
+      }
+    </ScrollView>
     );
 };
 
