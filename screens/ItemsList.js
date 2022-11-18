@@ -24,7 +24,7 @@ import * as geolib from 'geolib';
 
 const ItemsList = ({ navigation }) => {
 
-  const { sortingOption, setSortingOption } = React.useContext(Context)
+  const { sortingOption, setSortingOption, coordinates, setCoordinates } = React.useContext(Context);
 
 
   const myitems = [
@@ -66,10 +66,7 @@ const ItemsList = ({ navigation }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newData, setNewData] = useState(items);
-  const [coordinates, setCoordinates] = useState({
-    latitude: 0,
-    longitude: 0
-  });
+  
 
   const range = 4000;
 
@@ -257,8 +254,22 @@ const ItemsList = ({ navigation }) => {
     );
   };
 
+  // const sortingMethod = (sortingOption) => {
+  //   return (sortingOption.value ? newData.sort((a, b) => a.price.localeCompare(b.price)) : (newData.sort((a, b) => a.price.localeCompare(b.price)).reverse()));
+  // }
+
   const sortingMethod = (sortingOption) => {
-    return (sortingOption.value ? newData.sort((a, b) => a.price.localeCompare(b.price)) : (newData.sort((a, b) => a.price.localeCompare(b.price)).reverse()));
+    sortingOption = sortingOption.value;
+
+    if (sortingOption==0) {
+      return (newData.sort((a, b) => a.price.localeCompare(b.price)));
+    } else if (sortingOption==1) {
+      return (newData.sort((a, b) => a.price.localeCompare(b.price)).reverse());
+    } else if(sortingOption==2){
+      return newData.sort((a, b) => (geolib.getDistance(a.pin,coordinates)/1000) > (geolib.getDistance(b.pin,coordinates)/1000));
+    } else if(sortingOption==3){
+      return newData.sort((a, b) => (geolib.getDistance(a.pin,coordinates)/1000) < (geolib.getDistance(b.pin,coordinates)/1000));
+    } else return newData;
   }
 
   return (
