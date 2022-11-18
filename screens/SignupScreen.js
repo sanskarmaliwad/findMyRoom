@@ -33,10 +33,10 @@ const SignupScreen = ({ navigation }) => {
   const userSignup = async () => {
     //console.log(email + ' ' + password + ' ' + confirmPassword);
     if (!email || !password || !confirmPassword) {
-      Alert.alert("please all all the fields");
+      Alert.alert("Please Enter All The Fields");
       return;
     } else if (validator.validate(email) == false) {
-      Alert.alert("please enter valid email address");
+      Alert.alert("Please enter a valid email address");
       return;
     } else if (password.length < 8 || password.length > 20) {
       Alert.alert("Password should be min 8 char and max 20 char");
@@ -51,7 +51,7 @@ const SignupScreen = ({ navigation }) => {
 
     try {
       const result = await auth.createUserWithEmailAndPassword(email, password);
-      console.log("user is Registered");
+      console.log("User is Registered");
       console.log(result.user.email);
     } catch (err) {
       Alert.alert("Something went wrong try again.");
@@ -68,7 +68,7 @@ const SignupScreen = ({ navigation }) => {
   const handleCreateAccount = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then(() => {
-        console.log("Account created");
+        console.log("Account Created");
         const user = userCredential.user;
         console.log(user);
       })
@@ -100,7 +100,7 @@ const SignupScreen = ({ navigation }) => {
           onChangeText={(text) => setEmail(text)}
         />
         <TextInput
-          label="password"
+          label="Password"
           value={password}
           mode="outlined"
           secureTextEntry={true}
@@ -108,7 +108,7 @@ const SignupScreen = ({ navigation }) => {
         />
 
         <TextInput
-          label="confirm password"
+          label="Confirm password"
           value={confirmPassword}
           mode="outlined"
           secureTextEntry={true}
