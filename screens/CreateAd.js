@@ -162,9 +162,6 @@ const CreateAd = ({ navigation }) => {
     );
   }
 
-// console.log("images: ", images);
-// console.log("urls", urls);
-
 // -------------------------
 // const selectPhoto = async ()=>{
 //     let result = await ImagePicker.launchImageLibraryAsync({
@@ -338,13 +335,7 @@ else
               // keyboardType="numeric"
               onChangeText={(text) => setSize(text)}
             />
-            {/* <TextInput
-              style={styles.inputBox}
-              label="Maximum Capacity of room"
-              value={maxCap}
-              keyboardType="numeric"
-              onChangeText={(text) => setMaxcap(text)}
-            /> */}
+            
             <TextInput
               style={styles.inputBox}
               label="Price in INR"
