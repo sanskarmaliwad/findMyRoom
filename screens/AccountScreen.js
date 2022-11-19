@@ -75,6 +75,7 @@ const AccountScreen = () => {
         ListHeaderComponent={
           <View style={styles.flatListHeaderStyle}>
             {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
+            <Text style = {styles.emailId}>{auth.currentUser.email}</Text>
             <TouchableOpacity
               style={styles.button}
               onPress={() => auth.signOut()}
@@ -102,6 +103,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#DDE2E5",
+  },
+  emailId:{
+    color: "skyblue",
+    textAlign: "center",
+    paddingBottom: 14,
   },
   flatListHeaderStyle: {
     margin: 10,

@@ -91,13 +91,6 @@ const CreateAd = ({ navigation }) => {
 
   const commonFun = async() => {
     pickImage1();
-    // console.log("running");
-    // let status = await pickImage1();
-    // console.log(status);
-    // if(status){
-    //   console.log("running when status true");
-    //   uplaod1New();
-    // }
   }
 
   const pickImage1 = async () => {
@@ -111,18 +104,13 @@ const CreateAd = ({ navigation }) => {
       aspect: [4, 3],
       quality: 1,
     });
-    // console.log(result);
-    // const target = result.selected;  // equal to target.files
+
     var target = [];
     if(!result.hasOwnProperty("selected")) {
       target = [result];
-      // console.log("running");
     } else {
       target = result.selected;
     }
-    // console.log(target);
-
-    // console.log(target.length);
 
     for (let i = 0; i < target.length; i++) {
       // console.log(target);
@@ -130,12 +118,9 @@ const CreateAd = ({ navigation }) => {
       newImage["id"] = Math.random();
       setImages((prevState) => [...prevState, newImage]);
     }
-    // if(result)return true;
-    // await uplaod1New();
   };
 
   const uplaod1New = async () => {
-    // console.log(images);
     let cnt = 1;
     setLoading(true);
     images.map(async (image) => {
@@ -155,77 +140,14 @@ const CreateAd = ({ navigation }) => {
         var message = "uploaded image" + cnt;
         if (progress == 100) { console.log(message); cnt++; }
         if (cnt === images.length + 1) {
-          console.log("all done."); alert("all done!"); setLoading(false);}
+          console.log("all done."); alert("All Images Uploaded"); setLoading(false);}
       }
       );
     }
     );
   }
 
-// -------------------------
-// const selectPhoto = async ()=>{
-//     let result = await ImagePicker.launchImageLibraryAsync({
-//         mediaTypes: ImagePicker.MediaTypeOptions.All,
-//         allowsEditing: true,
-//         aspect: [4, 3],
-//         quality: 1,
-//       });
 
-//       console.log(result.uri);
-
-//       if (!result.cancelled) {
-//         setImage(result.uri);
-//         console.log(result.uri)
-
-//       }
-
-//       const uploadTask = storageRef.child(`${Date.now()}`).putFile(result.uri)
-
-//       uploadTask.on('state_changed',
-//         (snapshot) => {
-
-//             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-//              if(progress==100){alert("uploaded")}
-//         },
-//         (error) => {
-//            alert("something went wrong")
-//         },
-//         () => {
-//             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-
-//                 setImage(downloadURL)
-//             });
-//         }
-//         );
-//    }
-
-//    --------------------------------------------
-
-// const openCamera = ()=>{
-//     launchImageLibrary({quality:0.5},(fileobj)=>{
-//         const uploadTask =  storage().ref().child(`/items/${Date.now()}`).putFile(fileobj.uri)
-//         uploadTask.on('state_changed',
-//         (snapshot) => {
-
-//             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-//              if(progress==100){alert("uploaded")}
-//         },
-//         (error) => {
-//            alert("something went wrong")
-//         },
-//         () => {
-//             // Handle successful uploads on complete
-//             // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-//             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-
-//                 setImage(downloadURL)
-//             });
-//         }
-//         );
-//        })
-//    }
-
-//    --------------------------------------------
 if (!isAdmin)
   return (
     <View style={styles.container}>
@@ -262,7 +184,7 @@ else
     >
 
       {loading ?
-        (<View style={styles.loader}><ActivityIndicator size="large" color="skyblue"/>
+        (<View style={styles.loader}><ActivityIndicator size="large" color="violet"/>
         <Text>Uploading Images ...</Text></View>)
         : (
           <View>
