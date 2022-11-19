@@ -65,7 +65,7 @@ const CreateAd = ({ navigation }) => {
         pin,
         uid: auth.currentUser.uid,
       });
-
+      
       Alert.alert("posted your Ad!");
 
 
@@ -324,7 +324,7 @@ else
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
                 onChange={(item) => {
-                  console.log(item);
+                  // console.log(item);
                   setIsAvailableFor(item.value);
                   setIsFocus(false);
                 }}

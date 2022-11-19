@@ -12,7 +12,7 @@ import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
 import { auth } from "../firebase";
 import { store } from "../firebase";
 import { COLORS, FONTS, SIZES } from "../constants";
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+
 
 const AccountScreen = () => {
   const [items, setItems] = useState([]);
@@ -40,7 +40,9 @@ const AccountScreen = () => {
     };
   }, []);
 
-  const renderItem = (item) => {
+
+
+  const renderItem = (item, deletePost) => {
     return (
       <Card style={styles.card}>
         <Card.Title title={item.LandMrk} />
@@ -52,7 +54,11 @@ const AccountScreen = () => {
           source={{ uri: item.urls[0] }}
         />
         <Card.Actions>
-          {/* <Button onPress={()=>(openDial(item.phone))}>call seller</Button> */}
+        <TouchableOpacity
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Delete</Text>
+          </TouchableOpacity>
         </Card.Actions>
       </Card>
     );
@@ -118,14 +124,14 @@ const styles = StyleSheet.create({
   },
   button: {
     margin: 6,
-    backgroundColor: "#DDE2E5",
+    backgroundColor: "#054367",
     paddingHorizontal: 15,
     paddingVertical: 5,
     borderRadius: 25,
     alignSelf: "center",
   },
   buttonText: {
-    color: COLORS.primary,
+    color: "#ffffff",
   },
 });
 
