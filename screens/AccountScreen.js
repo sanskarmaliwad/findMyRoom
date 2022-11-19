@@ -26,14 +26,19 @@ const AccountScreen = () => {
     setItems(result);
   };
 
-  const deleteAd = (id) =>{
+
+  // function for deleting ad using ad's id.
+
+  const deleteAd = (id) =>{ 
     store.collection("ads").doc(id).delete().then(() => {
       console.log("Document successfully deleted!");
       alert("Ad deleted SuccessFully! Refresh the page.");
-  }).catch((error) => {
+    }).catch((error) => {
       console.error("Error removing document: ", error);
-  });
-  }
+  });}
+  
+  // **IMP**  This function is deleting the ad's data from firestore but the
+  //  images stored in the firebase storage are yet to be deleted....
 
   useEffect(() => {
     getDetails();
@@ -49,12 +54,12 @@ const AccountScreen = () => {
         <TouchableOpacity
             onPress={() => deleteAd(item.id)}
             // console.log(item.id)
-            style={styles.button}
+            style={styles.delButton}
           >
             <Text style={styles.buttonText}>Delete Ad</Text>
         </TouchableOpacity>
         <Card.Content>
-          <Paragraph>Id is : {item.id}</Paragraph>
+          <Paragraph>Ad_Id : {item.id}</Paragraph>
         </Card.Content>
         <Card.Cover
           style={{ borderRadius: 10, overflow: "hidden" }}
@@ -132,6 +137,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#DDE2E5",
     paddingHorizontal: 15,
     paddingVertical: 5,
+    borderRadius: 25,
+    alignSelf: "center",
+  },
+  delButton: {
+    margin: 6,
+    backgroundColor: "red",
+    paddingHorizontal: 25,
+    paddingVertical: 7,
     borderRadius: 25,
     alignSelf: "center",
   },
