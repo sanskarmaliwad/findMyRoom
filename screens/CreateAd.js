@@ -11,27 +11,17 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import { TextInput, Button } from "react-native-paper";
-import { launchCamera, launchImageLibrary } from "react-native-image-picker";
-import { Camera, CameraType } from "expo-camera";
 // import * as ImagePicker from "expo-image-picker"
 import * as ImagePicker from "expo-image-picker";
 import { store, auth, storage, firebaseConfig } from "../firebase";
-import MapView, { Marker } from "react-native-maps";
-import MapInput, { MapInputVariant } from "react-native-map-input";
-import * as Location from "expo-location";
-import Map from "./Map";
 import { Context } from "../Context";
 import { COLORS, FONTS, SIZES } from "../constants";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dropdown } from "react-native-element-dropdown";
-import { color } from "react-native-reanimated";
 
 const storageRef = storage.ref();
 
 const CreateAd = ({ navigation }) => {
-  const { pin, setPin,
-    isAdmin, setisAdmin } = React.useContext(Context);
-  const [uploading, setUploading] = useState(false);
+  const { pin, isAdmin} = React.useContext(Context);
   // useEffect((e)=>{
   //     e.preventDefault();
   //   },[])
@@ -52,7 +42,6 @@ const CreateAd = ({ navigation }) => {
   const [phone, setPhone] = useState("");
   // const [maxCap, setMaxcap] = useState("");
   const [address, setAddress] = useState("");
-  const [image, setImage] = useState("");
 
   const [images, setImages] = useState([]);
   const [urls, setUrls] = useState([]);
@@ -63,6 +52,7 @@ const CreateAd = ({ navigation }) => {
   const postData = async () => {
     try {
       var id = await store.collection("ads").add({
+        name,
         LandMrk,
         desc,
         isAvailableFor,
@@ -90,7 +80,6 @@ const CreateAd = ({ navigation }) => {
       setPhone("");
       setMaxcap("");
       setAddress("");
-      setImage("");
       setImages([]);
       setUrls([]);
       setIsAvailableFor("");
@@ -105,13 +94,6 @@ const CreateAd = ({ navigation }) => {
 
   const commonFun = async() => {
     pickImage1();
-    // console.log("running");
-    // let status = await pickImage1();
-    // console.log(status);
-    // if(status){
-    //   console.log("running when status true");
-    //   uplaod1New();
-    // }
   }
 
   const pickImage1 = async () => {
@@ -125,18 +107,13 @@ const CreateAd = ({ navigation }) => {
       aspect: [4, 3],
       quality: 1,
     });
-    // console.log(result);
-    // const target = result.selected;  // equal to target.files
+
     var target = [];
     if(!result.hasOwnProperty("selected")) {
       target = [result];
-      // console.log("running");
     } else {
       target = result.selected;
     }
-    // console.log(target);
-
-    // console.log(target.length);
 
     for (let i = 0; i < target.length; i++) {
       // console.log(target);
@@ -144,12 +121,9 @@ const CreateAd = ({ navigation }) => {
       newImage["id"] = Math.random();
       setImages((prevState) => [...prevState, newImage]);
     }
-    // if(result)return true;
-    // await uplaod1New();
   };
 
   const uplaod1New = async () => {
-    // console.log(images);
     let cnt = 1;
     setLoading(true);
     images.map(async (image) => {
@@ -169,80 +143,14 @@ const CreateAd = ({ navigation }) => {
         var message = "uploaded image" + cnt;
         if (progress == 100) { console.log(message); cnt++; }
         if (cnt === images.length + 1) {
-          console.log("all done."); alert("all done!"); setLoading(false);}
+          console.log("all done."); alert("All Images Uploaded"); setLoading(false);}
       }
       );
     }
     );
   }
 
-// console.log("images: ", images);
-// console.log("urls", urls);
 
-// -------------------------
-// const selectPhoto = async ()=>{
-//     let result = await ImagePicker.launchImageLibraryAsync({
-//         mediaTypes: ImagePicker.MediaTypeOptions.All,
-//         allowsEditing: true,
-//         aspect: [4, 3],
-//         quality: 1,
-//       });
-
-//       console.log(result.uri);
-
-//       if (!result.cancelled) {
-//         setImage(result.uri);
-//         console.log(result.uri)
-
-//       }
-
-//       const uploadTask = storageRef.child(`${Date.now()}`).putFile(result.uri)
-
-//       uploadTask.on('state_changed',
-//         (snapshot) => {
-
-//             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-//              if(progress==100){alert("uploaded")}
-//         },
-//         (error) => {
-//            alert("something went wrong")
-//         },
-//         () => {
-//             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-
-//                 setImage(downloadURL)
-//             });
-//         }
-//         );
-//    }
-
-//    --------------------------------------------
-
-// const openCamera = ()=>{
-//     launchImageLibrary({quality:0.5},(fileobj)=>{
-//         const uploadTask =  storage().ref().child(`/items/${Date.now()}`).putFile(fileobj.uri)
-//         uploadTask.on('state_changed',
-//         (snapshot) => {
-
-//             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-//              if(progress==100){alert("uploaded")}
-//         },
-//         (error) => {
-//            alert("something went wrong")
-//         },
-//         () => {
-//             // Handle successful uploads on complete
-//             // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-//             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-
-//                 setImage(downloadURL)
-//             });
-//         }
-//         );
-//        })
-//    }
-
-//    --------------------------------------------
 if (!isAdmin)
   return (
     <View style={styles.container}>
@@ -279,7 +187,7 @@ else
     >
 
       {loading ?
-        (<View style={styles.loader}><ActivityIndicator size="large" color="skyblue"/>
+        (<View style={styles.loader}><ActivityIndicator size="large" color="violet"/>
         <Text>Uploading Images ...</Text></View>)
         : (
           <View>
@@ -352,13 +260,7 @@ else
               // keyboardType="numeric"
               onChangeText={(text) => setSize(text)}
             />
-            {/* <TextInput
-              style={styles.inputBox}
-              label="Maximum Capacity of room"
-              value={maxCap}
-              keyboardType="numeric"
-              onChangeText={(text) => setMaxcap(text)}
-            /> */}
+            
             <TextInput
               style={styles.inputBox}
               label="Price in INR"

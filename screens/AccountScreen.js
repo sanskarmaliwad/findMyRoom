@@ -12,6 +12,7 @@ import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
 import { auth } from "../firebase";
 import { store } from "../firebase";
 import { COLORS, FONTS, SIZES } from "../constants";
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const AccountScreen = () => {
   const [items, setItems] = useState([]);
@@ -48,7 +49,7 @@ const AccountScreen = () => {
         </Card.Content>
         <Card.Cover
           style={{ borderRadius: 10, overflow: "hidden" }}
-          source={{ uri: item.tempImage }}
+          source={{ uri: item.urls[0] }}
         />
         <Card.Actions>
           {/* <Button onPress={()=>(openDial(item.phone))}>call seller</Button> */}
@@ -74,6 +75,7 @@ const AccountScreen = () => {
         ListHeaderComponent={
           <View style={styles.flatListHeaderStyle}>
             {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
+            <Text style = {styles.emailId}>{auth.currentUser.email}</Text>
             <TouchableOpacity
               style={styles.button}
               onPress={() => auth.signOut()}
@@ -101,6 +103,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#DDE2E5",
+  },
+  emailId:{
+    color: "skyblue",
+    textAlign: "center",
+    paddingBottom: 14,
   },
   flatListHeaderStyle: {
     margin: 10,
