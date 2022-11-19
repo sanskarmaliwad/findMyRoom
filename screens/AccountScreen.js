@@ -8,11 +8,10 @@ import {
   Platform,
   TouchableOpacity,
 } from "react-native";
-import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
+import { Card, Paragraph } from "react-native-paper";
 import { auth } from "../firebase";
+import { COLORS, SIZES } from "../constants";
 import { store } from "../firebase";
-import { COLORS, FONTS, SIZES } from "../constants";
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const AccountScreen = () => {
   const [items, setItems] = useState([]);
@@ -26,13 +25,16 @@ const AccountScreen = () => {
     console.log(result);
     setItems(result);
   };
-  const openDial = (phone) => {
-    if (Platform.OS === "android") {
-      Linking.openURL(`tel:${phone}`);
-    } else {
-      Linking.openURL(`telprompt:${phone}`);
-    }
-  };
+
+  const deleteAd = (id) =>{
+    store.collection("ads").doc(id).delete().then(() => {
+      console.log("Document successfully deleted!");
+      alert("Ad deleted SuccessFully! Refresh the page.");
+  }).catch((error) => {
+      console.error("Error removing document: ", error);
+  });
+  }
+
   useEffect(() => {
     getDetails();
     return () => {
@@ -44,16 +46,20 @@ const AccountScreen = () => {
     return (
       <Card style={styles.card}>
         <Card.Title title={item.LandMrk} />
+        <TouchableOpacity
+            onPress={() => deleteAd(item.id)}
+            // console.log(item.id)
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Delete Ad</Text>
+        </TouchableOpacity>
         <Card.Content>
-          <Paragraph>Rs. {item.price}/-</Paragraph>
+          <Paragraph>Id is : {item.id}</Paragraph>
         </Card.Content>
         <Card.Cover
           style={{ borderRadius: 10, overflow: "hidden" }}
           source={{ uri: item.urls[0] }}
         />
-        <Card.Actions>
-          {/* <Button onPress={()=>(openDial(item.phone))}>call seller</Button> */}
-        </Card.Actions>
       </Card>
     );
   };
@@ -74,7 +80,6 @@ const AccountScreen = () => {
         refreshing={loading}
         ListHeaderComponent={
           <View style={styles.flatListHeaderStyle}>
-            {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
             <Text style = {styles.emailId}>{auth.currentUser.email}</Text>
             <TouchableOpacity
               style={styles.button}
@@ -90,7 +95,7 @@ const AccountScreen = () => {
                 alignSelf: "center",
               }}
             >
-              Hostel Entries Will Appear Here...
+              Your Hostel Entries Will Appear Here...
             </Text>
           </View>
         }

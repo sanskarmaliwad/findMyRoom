@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   TouchableOpacity,
   ScrollView,
@@ -8,23 +8,18 @@ import {
   Alert,
   Dimensions,
   ActivityIndicator,
-  KeyboardAvoidingView,
 } from "react-native";
 import { TextInput, Button } from "react-native-paper";
-// import * as ImagePicker from "expo-image-picker"
 import * as ImagePicker from "expo-image-picker";
-import { store, auth, storage, firebaseConfig } from "../firebase";
+import { store, auth, storage } from "../firebase";
 import { Context } from "../Context";
-import { COLORS, FONTS, SIZES } from "../constants";
+import { COLORS, SIZES } from "../constants";
 import { Dropdown } from "react-native-element-dropdown";
 
 const storageRef = storage.ref();
 
 const CreateAd = ({ navigation }) => {
   const { pin, isAdmin} = React.useContext(Context);
-  // useEffect((e)=>{
-  //     e.preventDefault();
-  //   },[])
 
   const data = [
     { label: "Boys", value: "Boys" },
@@ -92,13 +87,7 @@ const CreateAd = ({ navigation }) => {
 
   // start -------------------------
 
-  const commonFun = async() => {
-    pickImage1();
-  }
-
-  const pickImage1 = async () => {
-
-    
+  const pickImages = async () => {
 
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsMultipleSelection: true,
@@ -116,14 +105,13 @@ const CreateAd = ({ navigation }) => {
     }
 
     for (let i = 0; i < target.length; i++) {
-      // console.log(target);
       const newImage = target[i];
       newImage["id"] = Math.random();
       setImages((prevState) => [...prevState, newImage]);
     }
   };
 
-  const uplaod1New = async () => {
+  const uplaodImages = async () => {
     let cnt = 1;
     setLoading(true);
     images.map(async (image) => {
@@ -155,7 +143,6 @@ if (!isAdmin)
   return (
     <View style={styles.container}>
       <View style={styles.flatListHeaderStyle}>
-        {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
         <TouchableOpacity
           style={styles.button}
           onPress={() => auth.signOut()}
@@ -294,7 +281,7 @@ else
               style={styles.button}
               icon="camera"
               mode="contained"
-              onPress={() => commonFun()}
+              onPress={() => pickImages()}
             >
               pick Images
             </Button>
@@ -302,7 +289,7 @@ else
               style={styles.button}
               icon="camera"
               mode="contained"
-              onPress={() => uplaod1New()}
+              onPress={() => uplaodImages()}
             >
               upload Images
             </Button>
