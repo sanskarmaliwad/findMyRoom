@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   TouchableOpacity,
   ScrollView,
@@ -8,23 +8,18 @@ import {
   Alert,
   Dimensions,
   ActivityIndicator,
-  KeyboardAvoidingView,
 } from "react-native";
 import { TextInput, Button } from "react-native-paper";
-// import * as ImagePicker from "expo-image-picker"
 import * as ImagePicker from "expo-image-picker";
-import { store, auth, storage, firebaseConfig } from "../firebase";
+import { store, auth, storage } from "../firebase";
 import { Context } from "../Context";
-import { COLORS, FONTS, SIZES } from "../constants";
+import { COLORS, SIZES } from "../constants";
 import { Dropdown } from "react-native-element-dropdown";
 
 const storageRef = storage.ref();
 
 const CreateAd = ({ navigation }) => {
   const { pin, isAdmin} = React.useContext(Context);
-  // useEffect((e)=>{
-  //     e.preventDefault();
-  //   },[])
 
   const data = [
     { label: "Boys", value: "Boys" },
@@ -40,7 +35,7 @@ const CreateAd = ({ navigation }) => {
   const [size, setSize] = useState("");
   const [price, setPrice] = useState("");
   const [phone, setPhone] = useState("");
-  const [maxCap, setMaxcap] = useState("");
+  // const [maxCap, setMaxcap] = useState("");
   const [address, setAddress] = useState("");
 
   const [images, setImages] = useState([]);
@@ -51,7 +46,7 @@ const CreateAd = ({ navigation }) => {
 
   const postData = async () => {
     try {
-      await store.collection("ads").add({
+      var id = await store.collection("ads").add({
         name,
         LandMrk,
         desc,
@@ -59,13 +54,16 @@ const CreateAd = ({ navigation }) => {
         size,
         price,
         phone,
-        maxCap,
+        // maxCap,
         urls,
         address,
         pin,
         uid: auth.currentUser.uid,
       });
-      
+      store.collection("ads").doc(id.id).set({
+        id: id.id,
+      }, { merge: true });
+
       Alert.alert("posted your Ad!");
 
 
@@ -75,7 +73,7 @@ const CreateAd = ({ navigation }) => {
       setSize("");
       setPrice("");
       setPhone("");
-      setMaxcap("");
+      //setMaxcap("");
       setAddress("");
       setImages([]);
       setUrls([]);
@@ -89,20 +87,7 @@ const CreateAd = ({ navigation }) => {
 
   // start -------------------------
 
-  const commonFun = async() => {
-    pickImage1();
-    // console.log("running");
-    // let status = await pickImage1();
-    // console.log(status);
-    // if(status){
-    //   console.log("running when status true");
-    //   uplaod1New();
-    // }
-  }
-
-  const pickImage1 = async () => {
-
-    
+  const pickImages = async () => {
 
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsMultipleSelection: true,
@@ -111,31 +96,22 @@ const CreateAd = ({ navigation }) => {
       aspect: [4, 3],
       quality: 1,
     });
-    // console.log(result);
-    // const target = result.selected;  // equal to target.files
+
     var target = [];
     if(!result.hasOwnProperty("selected")) {
       target = [result];
-      // console.log("running");
     } else {
       target = result.selected;
     }
-    // console.log(target);
-
-    // console.log(target.length);
 
     for (let i = 0; i < target.length; i++) {
-      // console.log(target);
       const newImage = target[i];
       newImage["id"] = Math.random();
       setImages((prevState) => [...prevState, newImage]);
     }
-    // if(result)return true;
-    // await uplaod1New();
   };
 
-  const uplaod1New = async () => {
-    // console.log(images);
+  const uplaodImages = async () => {
     let cnt = 1;
     setLoading(true);
     images.map(async (image) => {
@@ -155,85 +131,18 @@ const CreateAd = ({ navigation }) => {
         var message = "uploaded image" + cnt;
         if (progress == 100) { console.log(message); cnt++; }
         if (cnt === images.length + 1) {
-          console.log("all done."); alert("all done!"); setLoading(false);}
+          console.log("all done."); alert("All Images Uploaded"); setLoading(false);}
       }
       );
     }
     );
   }
 
-// console.log("images: ", images);
-// console.log("urls", urls);
 
-// -------------------------
-// const selectPhoto = async ()=>{
-//     let result = await ImagePicker.launchImageLibraryAsync({
-//         mediaTypes: ImagePicker.MediaTypeOptions.All,
-//         allowsEditing: true,
-//         aspect: [4, 3],
-//         quality: 1,
-//       });
-
-//       console.log(result.uri);
-
-//       if (!result.cancelled) {
-//         setImage(result.uri);
-//         console.log(result.uri)
-
-//       }
-
-//       const uploadTask = storageRef.child(`${Date.now()}`).putFile(result.uri)
-
-//       uploadTask.on('state_changed',
-//         (snapshot) => {
-
-//             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-//              if(progress==100){alert("uploaded")}
-//         },
-//         (error) => {
-//            alert("something went wrong")
-//         },
-//         () => {
-//             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-
-//                 setImage(downloadURL)
-//             });
-//         }
-//         );
-//    }
-
-//    --------------------------------------------
-
-// const openCamera = ()=>{
-//     launchImageLibrary({quality:0.5},(fileobj)=>{
-//         const uploadTask =  storage().ref().child(`/items/${Date.now()}`).putFile(fileobj.uri)
-//         uploadTask.on('state_changed',
-//         (snapshot) => {
-
-//             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-//              if(progress==100){alert("uploaded")}
-//         },
-//         (error) => {
-//            alert("something went wrong")
-//         },
-//         () => {
-//             // Handle successful uploads on complete
-//             // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-//             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-
-//                 setImage(downloadURL)
-//             });
-//         }
-//         );
-//        })
-//    }
-
-//    --------------------------------------------
 if (!isAdmin)
   return (
     <View style={styles.container}>
       <View style={styles.flatListHeaderStyle}>
-        {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
         <TouchableOpacity
           style={styles.button}
           onPress={() => auth.signOut()}
@@ -265,7 +174,7 @@ else
     >
 
       {loading ?
-        (<View style={styles.loader}><ActivityIndicator size="large" color="skyblue"/>
+        (<View style={styles.loader}><ActivityIndicator size="large" color="violet"/>
         <Text>Uploading Images ...</Text></View>)
         : (
           <View>
@@ -333,18 +242,12 @@ else
 
             <TextInput
               style={styles.inputBox}
-              label="size of Room"
+              label="Size of Room (Number of Beds)"
               value={size}
               // keyboardType="numeric"
               onChangeText={(text) => setSize(text)}
             />
-            <TextInput
-              style={styles.inputBox}
-              label="Maximum Capacity of room"
-              value={maxCap}
-              keyboardType="numeric"
-              onChangeText={(text) => setMaxcap(text)}
-            />
+            
             <TextInput
               style={styles.inputBox}
               label="Price in INR"
@@ -378,7 +281,7 @@ else
               style={styles.button}
               icon="camera"
               mode="contained"
-              onPress={() => commonFun()}
+              onPress={() => pickImages()}
             >
               pick Images
             </Button>
@@ -386,7 +289,7 @@ else
               style={styles.button}
               icon="camera"
               mode="contained"
-              onPress={() => uplaod1New()}
+              onPress={() => uplaodImages()}
             >
               upload Images
             </Button>

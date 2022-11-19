@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StatusBar,
   View,
@@ -11,18 +11,13 @@ import {
   TouchableHighlight,
   ScrollView,
 } from "react-native";
-import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
+import { Card, Paragraph } from "react-native-paper";
 import { store } from "../firebase";
 import HomeHeader from "../components/HomeHeader";
-import { COLORS } from "../constants";
-import { useAnimatedScrollHandler } from "react-native-reanimated";
-import codegenNativeCommands from "react-native/Libraries/Utilities/codegenNativeCommands";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Context } from "../Context";
 import * as Location from "expo-location";
 import * as geolib from "geolib";
-import SkeletonPlaceholder from "react-native-skeleton-placeholder";
-import { LinearGradient } from "expo-linear-gradient";
+
 
 const ItemsList = ({ navigation }) => {
   const { sortingOption, setSortingOption, coordinates, setCoordinates } =
@@ -195,7 +190,7 @@ const ItemsList = ({ navigation }) => {
               landMrk: item.LandMrk,
               size: item.size,
               price: item.price,
-              maxCap: item.maxCap,
+              // maxCap: item.maxCap,
               address: item.address,
               phone: item.phone,
               pin: item.pin,
@@ -219,7 +214,7 @@ const ItemsList = ({ navigation }) => {
                 size: item.size,
                 isAvailableFor: item.isAvailableFor,
                 price: item.price,
-                maxCap: item.maxCap,
+                // maxCap: item.maxCap,
                 address: item.address,
                 phone: item.phone,
                 pin: item.pin,
