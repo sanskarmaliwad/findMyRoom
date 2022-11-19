@@ -51,7 +51,7 @@ const CreateAd = ({ navigation }) => {
 
   const postData = async () => {
     try {
-      await store.collection("ads").add({
+      var id = await store.collection("ads").add({
         name,
         LandMrk,
         desc,
@@ -65,6 +65,9 @@ const CreateAd = ({ navigation }) => {
         pin,
         uid: auth.currentUser.uid,
       });
+      store.collection("ads").doc(id.id).set({
+        id: id.id,
+      }, { merge: true });
 
       Alert.alert("posted your Ad!");
 
