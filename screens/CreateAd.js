@@ -78,7 +78,7 @@ const CreateAd = ({ navigation }) => {
       setSize("");
       setPrice("");
       setPhone("");
-      setMaxcap("");
+      //setMaxcap("");
       setAddress("");
       setImages([]);
       setUrls([]);
