@@ -73,7 +73,6 @@ const CreateAd = ({ navigation }) => {
       setSize("");
       setPrice("");
       setPhone("");
-      //setMaxcap("");
       setAddress("");
       setImages([]);
       setUrls([]);
@@ -182,7 +181,6 @@ else
           <View>
 
             <View style={styles.flatListHeaderStyle}>
-              {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
               <Text style={{ color: "#DDE2E5", fontSize: 18, alignSelf: "center" }}>
                 Post Your Entries Here..
               </Text>
@@ -235,7 +233,6 @@ else
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
                 onChange={(item) => {
-                  // console.log(item);
                   setIsAvailableFor(item.value);
                   setIsFocus(false);
                 }}
@@ -246,7 +243,6 @@ else
               style={styles.inputBox}
               label="Size of Room (Number of Beds)"
               value={size}
-              // keyboardType="numeric"
               onChangeText={(text) => setSize(text)}
             />
             
@@ -312,7 +308,6 @@ else
 
 const styles = StyleSheet.create({
   loader:{
-    // position: 'absolute',
     marginTop:"50%",
     left: 0,
     right: 0,

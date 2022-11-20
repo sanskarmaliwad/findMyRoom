@@ -4,8 +4,6 @@ import {
   Text,
   FlatList,
   StyleSheet,
-  Linking,
-  Platform,
   TouchableOpacity,
 } from "react-native";
 import { Card, Paragraph } from "react-native-paper";
@@ -35,7 +33,6 @@ const AccountScreen = () => {
     };
   }, []);
 
-
   // for deleting add with images start =================================================
 
   const deleteAd = (id, imageNames) => {
@@ -48,10 +45,10 @@ const AccountScreen = () => {
 
     if (imageNames.length > 0) {  // will delete the images of deleted add from storage.
       for (let i = 0; i < imageNames.length; i++) {
-        var desertRef = storageRef.child(`/images/${imageNames[i]}`);
-        desertRef.delete().then(() => {
+        var imageRef = storageRef.child(`/images/${imageNames[i]}`);
+        imageRef.delete().then(() => {
           if (i === (imageNames.length) - 1) console.log("All Images Deleted !")
-        }) // catch here
+        }) // catch will come here
       };
     }
   }
