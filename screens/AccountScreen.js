@@ -11,7 +11,9 @@ import {
 import { Card, Paragraph } from "react-native-paper";
 import { auth } from "../firebase";
 import { COLORS, SIZES } from "../constants";
-import { store } from "../firebase";
+import { store,storage } from "../firebase";
+
+const storageRef = storage.ref();
 
 const AccountScreen = () => {
   const [items, setItems] = useState([]);
@@ -26,20 +28,6 @@ const AccountScreen = () => {
     setItems(result);
   };
 
-
-  // function for deleting ad using ad's id.
-
-  const deleteAd = (id) =>{ 
-    store.collection("ads").doc(id).delete().then(() => {
-      console.log("Document successfully deleted!");
-      alert("Ad deleted SuccessFully! Refresh the page.");
-    }).catch((error) => {
-      console.error("Error removing document: ", error);
-  });}
-  
-  // **IMP**  This function is deleting the ad's data from firestore but the
-  //  images stored in the firebase storage are yet to be deleted....
-
   useEffect(() => {
     getDetails();
     return () => {
@@ -47,14 +35,30 @@ const AccountScreen = () => {
     };
   }, []);
 
+  const deleteAd = (id, imageNames) => {
+    store.collection("ads").doc(id).delete().then(() => {
+      console.log("Document successfully deleted!");
+      alert("Ad deleted SuccessFully! Refresh the page.");
+    }).catch((error) => {
+      console.error("Error removing document: ", error);
+    });
 
+    if (imageNames.length > 0) {
+      for (let i = 0; i < imageNames.length; i++) {
+        var desertRef = storageRef.child(`/images/${imageNames[i]}`);
+        desertRef.delete().then(() => {
+          if(i === (imageNames.length)-1) console.log("All Images Deleted !")
+        })
+      };
+    }
+  }
 
   const renderItem = (item, deletePost) => {
     return (
       <Card style={styles.card}>
         <Card.Title title={item.LandMrk} />
         <TouchableOpacity
-            onPress={() => deleteAd(item.id)}
+            onPress={() => deleteAd(item.id,item.imageNames)}
             // console.log(item.id)
             style={styles.delButton}
           >

@@ -35,13 +35,13 @@ const CreateAd = ({ navigation }) => {
   const [size, setSize] = useState("");
   const [price, setPrice] = useState("");
   const [phone, setPhone] = useState("");
-  // const [maxCap, setMaxcap] = useState("");
   const [address, setAddress] = useState("");
 
   const [images, setImages] = useState([]);
   const [urls, setUrls] = useState([]);
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [imageNames,setImageNames] = useState([]);
 
 
   const postData = async () => {
@@ -54,11 +54,11 @@ const CreateAd = ({ navigation }) => {
         size,
         price,
         phone,
-        // maxCap,
         urls,
         address,
         pin,
         uid: auth.currentUser.uid,
+        imageNames,  // will be used for deleting images.
       });
       store.collection("ads").doc(id.id).set({
         id: id.id,
@@ -85,10 +85,9 @@ const CreateAd = ({ navigation }) => {
     }
   };
 
-  // start -------------------------
+  // image work Start ======================================================
 
   const pickImages = async () => {
-
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsMultipleSelection: true,
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -120,6 +119,7 @@ const CreateAd = ({ navigation }) => {
       const blob = await response.blob();
       const filename = Date.now();
       var ref = storageRef.child(`/images/${filename}`).put(blob);
+      setImageNames((prevState) => [...prevState, filename]);
 
       ref.then((snapshot) => {
         ref.snapshot.ref.getDownloadURL().then((downloadURL) => {
@@ -137,6 +137,8 @@ const CreateAd = ({ navigation }) => {
     }
     );
   }
+
+  // image work done ======================================================
 
 
 if (!isAdmin)
