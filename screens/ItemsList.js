@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StatusBar,
   View,
@@ -11,18 +11,13 @@ import {
   TouchableHighlight,
   ScrollView,
 } from "react-native";
-import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
+import { Card, Paragraph } from "react-native-paper";
 import { store } from "../firebase";
 import HomeHeader from "../components/HomeHeader";
-import { COLORS } from "../constants";
-import { useAnimatedScrollHandler } from "react-native-reanimated";
-import codegenNativeCommands from "react-native/Libraries/Utilities/codegenNativeCommands";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Context } from "../Context";
 import * as Location from "expo-location";
 import * as geolib from "geolib";
-import SkeletonPlaceholder from "react-native-skeleton-placeholder";
-import { LinearGradient } from "expo-linear-gradient";
+
 
 const ItemsList = ({ navigation }) => {
   const { sortingOption, setSortingOption, coordinates, setCoordinates } =
@@ -73,6 +68,8 @@ const ItemsList = ({ navigation }) => {
   const getDetails = async () => {
     const querySnap = await store.collection("ads").get();
     const result = querySnap.docs.map((docSnap) => docSnap.data());
+    console.log(querySnap.docs.map((docSnap) => docSnap.data()));
+
     // console.log(result);
     setItems(result);
     setNewData(result);

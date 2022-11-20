@@ -4,15 +4,14 @@ import {
   Text,
   FlatList,
   StyleSheet,
-  Linking,
-  Platform,
   TouchableOpacity,
 } from "react-native";
-import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
+import { Card, Paragraph } from "react-native-paper";
 import { auth } from "../firebase";
-import { store } from "../firebase";
-import { COLORS, FONTS, SIZES } from "../constants";
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import { COLORS, SIZES } from "../constants";
+import { store, storage } from "../firebase";
+
+const storageRef = storage.ref();
 
 const AccountScreen = () => {
   const [items, setItems] = useState([]);
@@ -26,13 +25,7 @@ const AccountScreen = () => {
     console.log(result);
     setItems(result);
   };
-  const openDial = (phone) => {
-    if (Platform.OS === "android") {
-      Linking.openURL(`tel:${phone}`);
-    } else {
-      Linking.openURL(`telprompt:${phone}`);
-    }
-  };
+
   useEffect(() => {
     getDetails();
     return () => {
@@ -40,20 +33,47 @@ const AccountScreen = () => {
     };
   }, []);
 
-  const renderItem = (item) => {
+  // for deleting add with images start =================================================
+
+  const deleteAd = (id, imageNames) => {
+    store.collection("ads").doc(id).delete().then(() => {  // will delete the ad from firestore.
+      console.log("Document successfully deleted !");
+      alert("Ad deleted SuccessFully! Refresh the page.");
+    }).catch((error) => {
+      console.error("Error removing document: ", error);
+    });
+
+    if (imageNames.length > 0) {  // will delete the images of deleted add from storage.
+      for (let i = 0; i < imageNames.length; i++) {
+        var imageRef = storageRef.child(`/images/${imageNames[i]}`);
+        imageRef.delete().then(() => {
+          if (i === (imageNames.length) - 1) console.log("All Images Deleted !")
+        }) // catch will come here
+      };
+    }
+  }
+  // .catch((error) => {
+  //   console.log(error);
+  // });
+
+  // for deleting add with images end =================================================
+
+  const renderItem = (item, deletePost) => {
     return (
       <Card style={styles.card}>
         <Card.Title title={item.LandMrk} />
+        <TouchableOpacity
+          onPress={() => deleteAd(item.id, item.imageNames)}
+          style={styles.delButton}>
+          <Text style={styles.buttonText}>Delete Ad</Text>
+        </TouchableOpacity>
         <Card.Content>
-          <Paragraph>Rs. {item.price}/-</Paragraph>
+          <Paragraph>Ad_Id : {item.id}</Paragraph>
         </Card.Content>
         <Card.Cover
           style={{ borderRadius: 10, overflow: "hidden" }}
           source={{ uri: item.urls[0] }}
         />
-        <Card.Actions>
-          {/* <Button onPress={()=>(openDial(item.phone))}>call seller</Button> */}
-        </Card.Actions>
       </Card>
     );
   };
@@ -74,8 +94,7 @@ const AccountScreen = () => {
         refreshing={loading}
         ListHeaderComponent={
           <View style={styles.flatListHeaderStyle}>
-            {/* <Text style={{fonstSize:22}}>{auth.currentUser.email}</Text> */}
-            <Text style = {styles.emailId}>{auth.currentUser.email}</Text>
+            <Text style={styles.emailId}>{auth.currentUser.email}</Text>
             <TouchableOpacity
               style={styles.button}
               onPress={() => auth.signOut()}
@@ -90,7 +109,7 @@ const AccountScreen = () => {
                 alignSelf: "center",
               }}
             >
-              Hostel Entries Will Appear Here...
+              Your Posted Ad(s) Will Appear Here...
             </Text>
           </View>
         }
@@ -104,7 +123,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#DDE2E5",
   },
-  emailId:{
+  emailId: {
     color: "skyblue",
     textAlign: "center",
     paddingBottom: 14,
@@ -124,14 +143,22 @@ const styles = StyleSheet.create({
   },
   button: {
     margin: 6,
-    backgroundColor: "#DDE2E5",
+    backgroundColor: "#054367",
     paddingHorizontal: 15,
     paddingVertical: 5,
     borderRadius: 25,
     alignSelf: "center",
   },
+  delButton: {
+    margin: 6,
+    backgroundColor: "red",
+    paddingHorizontal: 25,
+    paddingVertical: 7,
+    borderRadius: 25,
+    alignSelf: "center",
+  },
   buttonText: {
-    color: COLORS.primary,
+    color: "#ffffff",
   },
 });
 
