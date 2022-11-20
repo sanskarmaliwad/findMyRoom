@@ -11,7 +11,7 @@ import {
 import { Card, Paragraph } from "react-native-paper";
 import { auth } from "../firebase";
 import { COLORS, SIZES } from "../constants";
-import { store,storage } from "../firebase";
+import { store, storage } from "../firebase";
 
 const storageRef = storage.ref();
 
@@ -35,34 +35,40 @@ const AccountScreen = () => {
     };
   }, []);
 
+
+  // for deleting add with images start =================================================
+
   const deleteAd = (id, imageNames) => {
-    store.collection("ads").doc(id).delete().then(() => {
-      console.log("Document successfully deleted!");
+    store.collection("ads").doc(id).delete().then(() => {  // will delete the ad from firestore.
+      console.log("Document successfully deleted !");
       alert("Ad deleted SuccessFully! Refresh the page.");
     }).catch((error) => {
       console.error("Error removing document: ", error);
     });
 
-    if (imageNames.length > 0) {
+    if (imageNames.length > 0) {  // will delete the images of deleted add from storage.
       for (let i = 0; i < imageNames.length; i++) {
         var desertRef = storageRef.child(`/images/${imageNames[i]}`);
         desertRef.delete().then(() => {
-          if(i === (imageNames.length)-1) console.log("All Images Deleted !")
-        })
+          if (i === (imageNames.length) - 1) console.log("All Images Deleted !")
+        }) // catch here
       };
     }
   }
+  // .catch((error) => {
+  //   console.log(error);
+  // });
+
+  // for deleting add with images end =================================================
 
   const renderItem = (item, deletePost) => {
     return (
       <Card style={styles.card}>
         <Card.Title title={item.LandMrk} />
         <TouchableOpacity
-            onPress={() => deleteAd(item.id,item.imageNames)}
-            // console.log(item.id)
-            style={styles.delButton}
-          >
-            <Text style={styles.buttonText}>Delete Ad</Text>
+          onPress={() => deleteAd(item.id, item.imageNames)}
+          style={styles.delButton}>
+          <Text style={styles.buttonText}>Delete Ad</Text>
         </TouchableOpacity>
         <Card.Content>
           <Paragraph>Ad_Id : {item.id}</Paragraph>
@@ -91,7 +97,7 @@ const AccountScreen = () => {
         refreshing={loading}
         ListHeaderComponent={
           <View style={styles.flatListHeaderStyle}>
-            <Text style = {styles.emailId}>{auth.currentUser.email}</Text>
+            <Text style={styles.emailId}>{auth.currentUser.email}</Text>
             <TouchableOpacity
               style={styles.button}
               onPress={() => auth.signOut()}
@@ -106,7 +112,7 @@ const AccountScreen = () => {
                 alignSelf: "center",
               }}
             >
-              Your Hostel Entries Will Appear Here...
+              Your Posted Ad(s) Will Appear Here...
             </Text>
           </View>
         }
@@ -120,7 +126,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#DDE2E5",
   },
-  emailId:{
+  emailId: {
     color: "skyblue",
     textAlign: "center",
     paddingBottom: 14,
