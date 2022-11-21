@@ -77,6 +77,7 @@ const CreateAd = ({ navigation }) => {
       setImages([]);
       setUrls([]);
       setIsAvailableFor("");
+      setImageNames([]);
 
     } catch (err) {
       console.log(err);
