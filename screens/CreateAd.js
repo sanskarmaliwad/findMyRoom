@@ -77,6 +77,7 @@ const CreateAd = ({ navigation }) => {
       setImages([]);
       setUrls([]);
       setIsAvailableFor("");
+      setImageNames([]);
 
     } catch (err) {
       console.log(err);
@@ -92,7 +93,7 @@ const CreateAd = ({ navigation }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       selectionLimit: 5,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0.6,  // decreasing quality of image to 60% for fast loading.
     });
 
     var target = [];
@@ -137,7 +138,7 @@ const CreateAd = ({ navigation }) => {
     );
   }
 
-  // image work done ======================================================
+  // image work end  ======================================================
 
 
 if (!isAdmin)
