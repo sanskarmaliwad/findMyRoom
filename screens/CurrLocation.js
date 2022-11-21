@@ -1,16 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   View,
-  Text,
   StyleSheet,
-  Alert,
-  Dimensions,
-  KeyboardAvoidingView,
-  Title,
   TouchableOpacity,
   Image,
 } from "react-native";
-import { TextInput, Button } from "react-native-paper";
 import MapView, { Marker } from "react-native-maps";
 
 const CurrLocation = ({ route, navigation }) => {
@@ -62,7 +56,6 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     width: 35,
     height: 35,
-    //backgroundColor:'black'
   },
 });
 

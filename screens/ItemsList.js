@@ -23,42 +23,6 @@ const ItemsList = ({ navigation }) => {
   const { sortingOption, setSortingOption, coordinates, setCoordinates } =
     React.useContext(Context);
 
-  const myitems = [
-    {
-      LandMrk: "abc mark",
-      desc: "Sample Description .... here it is",
-      size: "1BHK",
-      price: "6000",
-      phone: "9856483745",
-      maxCap: "2",
-      address: "abb nagar",
-      image:
-        "https://www.shutterstock.com/image-photo/word-link-serious-businessman-hands-600w-180015809.jpg",
-    },
-    {
-      LandMrk: "abc mark",
-      desc: "Sample Description .... here it is",
-      size: "1BHK",
-      price: "6000",
-      phone: "8856483745",
-      maxCap: "2",
-      address: "abb nagar",
-      image:
-        "https://www.shutterstock.com/image-photo/word-link-serious-businessman-hands-600w-180015809.jpg",
-    },
-    {
-      LandMrk: "abc mark",
-      desc: "Sample Description .... here it is",
-      size: "1BHK",
-      price: "6000",
-      phone: "7856483745",
-      maxCap: "2",
-      address: "abb nagar",
-      image:
-        "https://www.shutterstock.com/image-photo/word-link-serious-businessman-hands-600w-180015809.jpg",
-    },
-  ];
-
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newData, setNewData] = useState(items);
@@ -164,9 +128,9 @@ const ItemsList = ({ navigation }) => {
     }
   };
 
-  const descAlert = (value) => {
-    alert(value);
-  };
+  // const descAlert = (value) => {
+  //   alert(value);
+  // };
   const renderItem = (item) => {
     return (
       <Card style={styles.card}>

@@ -7,14 +7,11 @@ import {
   StyleSheet,
   Image,
   Alert,
-  Dimensions,
 } from "react-native";
-import * as firebase from "firebase";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { TextInput, Button } from "react-native-paper";
 import { auth} from "../firebase";
 import validator from "email-validator";
-import { enableNetworkProviderAsync } from "expo-location";
 
 
 

@@ -7,8 +7,6 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   Alert,
-  ScrollView,
-  Dimensions,
 } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import { auth } from "../firebase";

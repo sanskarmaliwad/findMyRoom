@@ -21,13 +21,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const Map = ({ route, navigation }) => {
 
   const { pin, setPin} = React.useContext(Context);
-
   console.log(pin);
-
-  // const [ pin, setPin ] = useState({
-  // 	latitude: 37.78825,
-  // 	longitude: -122.4324
-  // })
 
   const [mapRegion, setMapRegion] = useState({
     latitude: 22.724713889937046,
@@ -164,7 +158,6 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     width: 35,
     height: 35,
-    //backgroundColor:'black'
   },
 });
 
