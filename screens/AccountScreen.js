@@ -94,7 +94,7 @@ const AccountScreen = () => {
         refreshing={loading}
         ListHeaderComponent={
           <View style={styles.flatListHeaderStyle}>
-            <Text style={styles.emailId}>{auth.currentUser.email}</Text>
+            <Text style={styles.emailId}>Logged in as: {auth.currentUser.email}</Text>
             <TouchableOpacity
               style={styles.button}
               onPress={() => auth.signOut()}
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#DDE2E5",
   },
   emailId: {
-    color: "skyblue",
+    color: "#ffffff",
     textAlign: "center",
     paddingBottom: 14,
   },
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   },
   button: {
     margin: 6,
-    backgroundColor: "#054367",
+    backgroundColor: "#ffffff",
     paddingHorizontal: 15,
     paddingVertical: 5,
     borderRadius: 25,
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   buttonText: {
-    color: "#ffffff",
+    color: "#000",
   },
 });
 
