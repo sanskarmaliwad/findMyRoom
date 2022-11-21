@@ -10,6 +10,7 @@ import { Card, Paragraph } from "react-native-paper";
 import { auth } from "../firebase";
 import { COLORS, SIZES } from "../constants";
 import { store, storage } from "../firebase";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const storageRef = storage.ref();
 
@@ -62,18 +63,21 @@ const AccountScreen = () => {
     return (
       <Card style={styles.card}>
         <Card.Title title={item.LandMrk} />
-        <TouchableOpacity
-          onPress={() => deleteAd(item.id, item.imageNames)}
-          style={styles.delButton}>
-          <Text style={styles.buttonText}>Delete Ad</Text>
-        </TouchableOpacity>
-        <Card.Content>
+        {/* <Card.Content>
           <Paragraph>Ad_Id : {item.id}</Paragraph>
-        </Card.Content>
+        </Card.Content> */}
         <Card.Cover
           style={{ borderRadius: 10, overflow: "hidden" }}
           source={{ uri: item.urls[0] }}
         />
+        <TouchableOpacity
+          onPress={() => deleteAd(item.id, item.imageNames)}
+          style={styles.delButton}>
+
+          <Text>
+              <Icon name="trash" size={30} color="black" />
+          </Text>
+        </TouchableOpacity>
       </Card>
     );
   };
@@ -151,9 +155,9 @@ const styles = StyleSheet.create({
   },
   delButton: {
     margin: 6,
-    backgroundColor: "red",
+    backgroundColor: "white",
     paddingHorizontal: 25,
-    paddingVertical: 7,
+    paddingVertical: 0,
     borderRadius: 25,
     alignSelf: "center",
   },
