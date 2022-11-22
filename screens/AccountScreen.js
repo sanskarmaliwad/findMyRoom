@@ -64,15 +64,15 @@ const AccountScreen = () => {
   const renderItem = (item, deletePost) => {
     return (
       <Card style={styles.card}>
-        <Card.Title title={item.LandMrk} />
-        {/* <Card.Content>
-          <Paragraph>Ad_Id : {item.id}</Paragraph>
-        </Card.Content> */}
+        <Card.Title title={item.name} />
+        <Card.Content>
+          <Paragraph>LandMark : {item.LandMrk}</Paragraph>
+        </Card.Content>
         <Card.Cover
           style={{ borderRadius: 10, overflow: "hidden" }}
           source={{ uri: item.urls[0] }}
         />
-        <TouchableOpacity
+        <TouchableOpacity 
           onPress={() => deleteAd(item.id, item.imageNames)}
           style={styles.delButton}>
 
@@ -157,9 +157,10 @@ const styles = StyleSheet.create({
   },
   delButton: {
     margin: 6,
-    backgroundColor: "white",
+    backgroundColor: "lightgrey",
     paddingHorizontal: 25,
     paddingVertical: 0,
+    paddingBottom: 3,
     borderRadius: 25,
     alignSelf: "center",
   },
