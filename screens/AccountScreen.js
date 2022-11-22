@@ -49,12 +49,11 @@ const AccountScreen = () => {
         var imageRef = storageRef.child(`/images/${imageNames[i]}`);
         imageRef.delete().then(() => {
           if (i === (imageNames.length) - 1) console.log("All Images Deleted !")
-          // else{console.log("deleting images one by one...")}
-        }) 
+          else{console.log("deleting images one by one...")}
+        }).catch((error) => {
+          console.log(error);
+        });
       };
-      // .catch((error) => {
-      //   console.log(error);
-      // });
     }
     getDetails(); // will auto reload the page after deletion of ad.
   }
