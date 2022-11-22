@@ -96,8 +96,6 @@ const CreateAd = ({ navigation }) => {
       quality: 0.6,  // decreasing quality of image to 60% for fast loading.
     });
 
-    console.log(result.uri);
-
     if(!result.hasOwnProperty("selected")){
         const newImage = result;
         newImage["id"] = Math.random();
@@ -111,11 +109,9 @@ const CreateAd = ({ navigation }) => {
           console.log(images.length);
       }
     }
-    // console.log(images.length);
   };
 
   const uplaodImages = async () => {
-    console.log(images.length);
     let cnt = 1;
     setLoading(true);
     images.map(async (image) => {
