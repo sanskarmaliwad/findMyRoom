@@ -39,7 +39,7 @@ const AccountScreen = () => {
   const deleteAd = (id, imageNames) => {
     store.collection("ads").doc(id).delete().then(() => {  // will delete the ad from firestore.
       console.log("Document successfully deleted !");
-      alert("Ad deleted SuccessFully! Refresh the page.");
+      alert("Ad deleted SuccessFully!");
     }).catch((error) => {
       console.error("Error removing document: ", error);
     });
@@ -49,13 +49,16 @@ const AccountScreen = () => {
         var imageRef = storageRef.child(`/images/${imageNames[i]}`);
         imageRef.delete().then(() => {
           if (i === (imageNames.length) - 1) console.log("All Images Deleted !")
-        }) // catch will come here
+          // else{console.log("deleting images one by one...")}
+        }) 
       };
+      // .catch((error) => {
+      //   console.log(error);
+      // });
     }
+    getDetails(); // will auto reload the page after deletion of ad.
   }
-  // .catch((error) => {
-  //   console.log(error);
-  // });
+  // 
 
   // for deleting add with images end =================================================
 
