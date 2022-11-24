@@ -93,7 +93,7 @@ const CreateAd = ({ navigation }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       selectionLimit: 5,
       aspect: [4, 3],
-      quality: 0.6,  // decreasing quality of image to 60% for fast loading.
+      quality: 0.6,  // decreasing quality of image to 60% for fast loading in flatlist.
     });
 
     if(!result.hasOwnProperty("selected")){

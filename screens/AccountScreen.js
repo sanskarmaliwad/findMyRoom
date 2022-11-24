@@ -90,7 +90,7 @@ const AccountScreen = () => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         data={items}
-        keyExtractor={(item) => item.phone}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => renderItem(item)}
         onRefresh={() => {
           setLoading(true);

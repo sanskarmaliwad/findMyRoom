@@ -247,7 +247,7 @@ const ItemsList = ({ navigation }) => {
         showsHorizontalScrollIndicator={false}
         data={sortingMethod(sortingOption)}
         // data={newData.sort((a,b) => a.price.localeCompare(b.price))}
-        keyExtractor={(item) => item.phone}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => renderItem(item)}
         onRefresh={() => {
           setLoading(true);
