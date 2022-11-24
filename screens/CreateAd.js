@@ -88,30 +88,30 @@ const CreateAd = ({ navigation }) => {
   // image work Start ======================================================
 
   const pickImages = async () => {
+    setImages([]);
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsMultipleSelection: true,
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       selectionLimit: 5,
       aspect: [4, 3],
-      quality: 0.6,  // decreasing quality of image to 60% for fast loading in flatlist.
+      quality: 0.6,  // decreasing quality of image to 60% for fast loading of images.
     });
 
     if(!result.hasOwnProperty("selected")){
         const newImage = result;
         newImage["id"] = Math.random();
         setImages((prevState) => [...prevState, newImage]);
-        console.log(images.length);
     } else {
       for (let i = 0; i < result.selected.length; i++) {
           const newImage = result.selected[i];
           newImage["id"] = Math.random();
           setImages((prevState) => [...prevState, newImage]);
-          console.log(images.length);
       }
     }
   };
 
   const uplaodImages = async () => {
+    console.log(images.length);
     let cnt = 1;
     setLoading(true);
     images.map(async (image) => {
