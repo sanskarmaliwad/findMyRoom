@@ -13,6 +13,10 @@ const Provider = ({ children }) => {
     latitude: 0,
     longitude: 0
   });
+  const [landMarkCoords, setLandMarkCoords] = React.useState({
+    latitude: 22.724713889937046,
+    longitude: 75.87278936058283,
+  })
   return (
     <Context.Provider
       value={{
@@ -20,6 +24,7 @@ const Provider = ({ children }) => {
         isAdmin, setisAdmin,
         sortingOption, setSortingOption,
         coordinates, setCoordinates,
+        landMarkCoords, setLandMarkCoords,
       }}
     >
       {children}

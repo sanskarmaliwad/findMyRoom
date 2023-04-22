@@ -20,8 +20,11 @@ import * as geolib from "geolib";
 
 
 const ItemsList = ({ navigation }) => {
-  const { sortingOption, setSortingOption, coordinates, setCoordinates } =
+  const { sortingOption, setSortingOption, coordinates, setCoordinates,landMarkCoords, setLandMarkCoords  } =
     React.useContext(Context);
+
+  
+
 
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -135,12 +138,13 @@ const ItemsList = ({ navigation }) => {
     return (
       <Card style={styles.card}>
         <Card.Title title={item.name} />
+        
 
         <Card.Content>
           <Paragraph style={{ textAlign: "left", fontWeight: "bold" }}>Rs {item.price}/-</Paragraph>
           <Paragraph style={{ paddingBottom: 5 }}>
             Hostel is just <Text style = {{fontWeight: "bold"}}>{geolib.getDistance(item.pin, coordinates) / 1000}{" "}km</Text>
-            {" "}away from you
+            {" "}away from LandMark
           </Paragraph>
           {/* <Paragraph>{item.desc}</Paragraph> */}
         </Card.Content>

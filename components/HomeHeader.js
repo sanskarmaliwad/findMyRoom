@@ -14,13 +14,29 @@ const HomeHeader = ({ onSearch, onSelectRange }) => {
   const [isFocus, setIsFocus] = useState(false);
 
   const { sortingOption, setSortingOption } = React.useContext(Context)
+  const { landMarkCoords, setLandMarkCoords } = React.useContext(Context)
 
   const data = [
     { label: "Price: Low to High", value: 0 },
     { label: "Price: High to Low", value: 1 },
-    { label: "Nearest First", value: 2 },
-    { label: "Nearest Last", value: 3 },
+    { label: "Nearest from Landmark", value: 2 },
+    { label: "Farthest from Landmark", value: 3 },
   ];
+
+  const lm = [
+    {label: "Vijay Nagar", value:{
+      latitude: 134.724713889937046,
+      longitude: 75.87278936058283,
+    } },
+    {label: "SGSITS", value:{
+      latitude: 22.724713889937046,
+      longitude: 75.87278936058283,
+    }},
+    {label: "Vallabh Nagar" , value:{
+      latitude: 20.724713889937046,
+    longitude: 75.87278936058283,
+    }}
+  ]
 
   return (
     <View
@@ -121,6 +137,24 @@ const HomeHeader = ({ onSearch, onSelectRange }) => {
               selectedTextStyle={styles.selectedTextStyle}
               inputSearchStyle={styles.inputSearchStyle}
               iconStyle={styles.iconStyle}
+              data={lm}
+              labelField="label"
+              valueField="value"
+              placeholder={!isFocus ? "Sort By" : "..."}
+              value={landMarkCoords}
+              onFocus={() => setIsFocus(true)}
+              onBlur={() => setIsFocus(false)}
+              onChange={(item) => {
+              setLandMarkCoords(item);
+              setIsFocus(false);
+            }}
+          />
+          <Dropdown
+              style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
               data={data}
               labelField="label"
               valueField="value"
@@ -149,9 +183,9 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     height: 40,
-    width:'60%',
+    width:'70%',
     alignSelf:'center',
-    borderRadius:20,
+    borderRadius:10,
     textAlign:'center',
     borderColor: "#EFF5F5",
     borderBottomWidth: 0.5,
